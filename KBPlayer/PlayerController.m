@@ -8,19 +8,32 @@
 
 #import "PlayerController.h"
 #import "FFmpegHeader.h"
+#import "VRPlayControlView.h"
+#import "KBPlayerHeader.h"
 
 @interface PlayerController ()
+
+@property(nonatomic,strong)VRPlayControlView *controlView;
 
 @end
 
 @implementation PlayerController
 
+#pragma mark - life cycle
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor whiteColor];
-    printf("------\n%s\n----------",avcodec_configuration());
+    self.view.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:self.controlView];
     
+    [self layoutSubPages];
+    
+}
+
+-(void)layoutSubPages{
+    [_controlView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.bottom.equalTo(self.view);
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -28,14 +41,28 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskLandscape;
 }
-*/
+
+-(void)dealloc{
+    NSLog(@"%@ dealloc",[self class]);
+}
+
+#pragma mark - button actions
+-(void)backButtonActions{
+    [self dismissViewControllerAnimated:NO completion:nil];
+}
+
+#pragma mark - setters and getters
+-(VRPlayControlView *)controlView{
+    if (_controlView == nil) {
+        _controlView = [[VRPlayControlView alloc] init];
+        [_controlView.backButton addTarget:self action:@selector(backButtonActions) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _controlView;
+}
+
 
 @end

@@ -56,7 +56,7 @@ const NSString *keyVideoTypeValue = @"keyVideoTypeValue";
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     PlayerController *vc = [[PlayerController alloc] init];
-    [self presentViewController:vc animated:YES completion:nil];
+    [self presentViewController:vc animated:NO completion:nil];
     
 }
 
