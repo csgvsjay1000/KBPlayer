@@ -69,7 +69,6 @@
     }];
     
     [_progressView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.size.mas_equalTo(CGSizeMake(100, 49));
         make.left.equalTo(_currentTimeLabel.mas_right);
         make.right.equalTo(_totalTimeLabel.mas_left);
         make.centerY.equalTo(_bottomView);
