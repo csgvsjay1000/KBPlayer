@@ -496,6 +496,7 @@
 				4C6A4CCE1CEC4EF30027BAA8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4C6A4CCF1CEC4EF30027BAA8 /* Build configuration list for PBXNativeTarget "KBPlayerTests" */ = {
 			isa = XCConfigurationList;
@@ -504,6 +505,7 @@
 				4C6A4CD11CEC4EF30027BAA8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4C6A4CD21CEC4EF30027BAA8 /* Build configuration list for PBXNativeTarget "KBPlayerUITests" */ = {
 			isa = XCConfigurationList;
@@ -512,6 +514,7 @@
 				4C6A4CD41CEC4EF30027BAA8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
