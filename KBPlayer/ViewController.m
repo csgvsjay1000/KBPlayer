@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "PlayerController.h"
 
 typedef NS_ENUM(NSUInteger, KBVideoType) {
     KBVideoTypeDefault,  //普通视屏
@@ -53,6 +54,9 @@ const NSString *keyVideoTypeValue = @"keyVideoTypeValue";
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    PlayerController *vc = [[PlayerController alloc] init];
+    [self presentViewController:vc animated:YES completion:nil];
     
 }
 
