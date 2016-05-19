@@ -138,7 +138,6 @@ int decode_interrupt_cb(void *opaque) {
         if (!_is->ic) {
             break;
         }
-//        sleep(1);
         if (av_read_frame(_is->ic, packet)>=0) {
             if (packet->stream_index == _is->audioStream) {
                 packet_queue_put(&_is->audioq, packet);
@@ -178,9 +177,6 @@ int decode_interrupt_cb(void *opaque) {
         
     }
     avformat_close_input(&_is->ic);
-//    if (_is) {
-//        av_free(_is);
-//    }
 
 }
 
@@ -244,7 +240,9 @@ static void AQueueOutputCallback(
 }
 
 -(void)readPacketsIntoBuffer:(AudioQueueBufferRef)buffer{
-    
+    if (!buffer) {
+        return;
+    }
     UInt32 len = buffer->mAudioDataBytesCapacity;
     int len1, audio_data_size;
     double pts;
