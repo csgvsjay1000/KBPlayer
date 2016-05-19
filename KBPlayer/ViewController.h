@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+extern NSString *keyVideoType;
+extern NSString *keyVideoTypeValue;
+extern NSString *keyVideoUrl;
+
 @interface ViewController : UIViewController
 
 

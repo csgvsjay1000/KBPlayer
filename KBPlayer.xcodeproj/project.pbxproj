@@ -38,6 +38,7 @@
 		4C6A4D981CEC658D0027BAA8 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6A4D8A1CEC658D0027BAA8 /* NSLayoutConstraint+MASDebugAdditions.m */; };
 		4C6A4D991CEC658D0027BAA8 /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6A4D8C1CEC658D0027BAA8 /* View+MASAdditions.m */; };
 		4C6A4D9A1CEC658D0027BAA8 /* ViewController+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6A4D8F1CEC658D0027BAA8 /* ViewController+MASAdditions.m */; };
+		4C86C65B1CED5E4D00F3CD4C /* cuc_ieschool.flv in Resources */ = {isa = PBXBuildFile; fileRef = 4C86C65A1CED5E4D00F3CD4C /* cuc_ieschool.flv */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -226,6 +227,7 @@
 		4C6A4D8F1CEC658D0027BAA8 /* ViewController+MASAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ViewController+MASAdditions.m"; sourceTree = "<group>"; };
 		4C6A4D9C1CEC68610027BAA8 /* KBPlayerHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KBPlayerHeader.h; sourceTree = "<group>"; };
 		4C6A4D9D1CEC687C0027BAA8 /* KBFunctionHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KBFunctionHeader.h; sourceTree = "<group>"; };
+		4C86C65A1CED5E4D00F3CD4C /* cuc_ieschool.flv */ = {isa = PBXFileReference; lastKnownFileType = file; path = cuc_ieschool.flv; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -307,6 +309,7 @@
 		4C6A4CA21CEC4EF20027BAA8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4C86C65A1CED5E4D00F3CD4C /* cuc_ieschool.flv */,
 				4C6A4D9B1CEC684B0027BAA8 /* KBHeader */,
 				4C6A4D751CEC658D0027BAA8 /* Masonry */,
 				4C6A4D621CEC5C560027BAA8 /* Framework */,
@@ -756,6 +759,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C86C65B1CED5E4D00F3CD4C /* cuc_ieschool.flv in Resources */,
 				4C6A4D901CEC658D0027BAA8 /* Info.plist in Resources */,
 				4C6A4CB21CEC4EF30027BAA8 /* LaunchScreen.storyboard in Resources */,
 				4C6A4CAF1CEC4EF30027BAA8 /* Assets.xcassets in Resources */,
@@ -939,6 +943,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/KBPlayer/ffmpeg/include";
 				INFOPLIST_FILE = KBPlayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -955,6 +960,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/KBPlayer/ffmpeg/include";
 				INFOPLIST_FILE = KBPlayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

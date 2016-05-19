@@ -17,6 +17,7 @@ typedef NS_ENUM(NSUInteger, KBVideoType) {
 
 const NSString *keyVideoType = @"keyVideoType";
 const NSString *keyVideoTypeValue = @"keyVideoTypeValue";
+const NSString *keyVideoUrl = @"keyVideoUrl";
 
 @interface ViewController ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -56,6 +57,7 @@ const NSString *keyVideoTypeValue = @"keyVideoTypeValue";
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     PlayerController *vc = [[PlayerController alloc] init];
+    vc.videoDictionary = self.array[indexPath.row];
     [self presentViewController:vc animated:NO completion:nil];
     
 }
@@ -79,9 +81,13 @@ const NSString *keyVideoTypeValue = @"keyVideoTypeValue";
         [_array addObject:@{
                             keyVideoType:[NSNumber numberWithInteger:KBVideoTypeDefault],
                             keyVideoTypeValue:@"普通视屏"}];
+//        NSString *path = [[NSBundle mainBundle] pathForResource:@"cuc_ieschool" ofType:@"flv"];
+        
+        //rtmp://0fwc91.live1-rtmp.z1.pili.qiniucdn.com/shutong/test1  香港卫视直播流
         [_array addObject:@{
                             keyVideoType:[NSNumber numberWithInteger:KBVideoTypePanorama],
-                            keyVideoTypeValue:@"全景视屏"}];
+                            keyVideoTypeValue:@"全景视屏",
+                            keyVideoUrl:@"rtmp://0fwc91.live1-rtmp.z1.pili.qiniucdn.com/shutong/test1"}];
         [_array addObject:@{
                             keyVideoType:[NSNumber numberWithInteger:KBVideoTypePanoramaUpAndDown],
                             keyVideoTypeValue:@"上下全景"}];

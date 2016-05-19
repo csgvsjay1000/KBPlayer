@@ -10,4 +10,6 @@
 
 @interface PlayerController : UIViewController
 
+@property(nonatomic,strong)NSDictionary *videoDictionary;
+
 @end

@@ -18,6 +18,9 @@
 #import "time.h"
 #import <AVFoundation/AVFoundation.h>
 
+#define MAX_AUDIOQ_SIZE (5 * 16 * 1024)
+#define MAX_VIDEOQ_SIZE (5 * 256 * 1024)
+
 #define NUM_BUFFERS 3
 #define AVCODEC_MAX_AUDIO_FRAME_SIZE 192000 // 1 second of 48khz 32bit audio
 
