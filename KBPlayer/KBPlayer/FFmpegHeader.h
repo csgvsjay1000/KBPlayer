@@ -17,6 +17,7 @@
 #import "swresample.h"
 #import "time.h"
 #import <AVFoundation/AVFoundation.h>
+#import <sys/time.h>
 
 #define MAX_AUDIOQ_SIZE (5 * 16 * 1024)
 #define MAX_VIDEOQ_SIZE (5 * 256 * 1024)
@@ -103,7 +104,15 @@ static int packet_queue_get(PacketQueue *q,AVPacket *pkt,int block){
             ret = 0;
             break;
         }else{
-            pthread_cond_wait(&q->cond, &q->mutex);
+            ret = -1;
+            struct timeval now;
+            struct timespec outtime;
+            gettimeofday(&now, NULL);
+            
+            outtime.tv_sec = now.tv_sec + 5;
+            outtime.tv_nsec = now.tv_usec * 1000;
+            pthread_cond_timedwait(&q->cond, &q->mutex, &outtime);
+//            pthread_cond_wait(&q->cond, &q->mutex);
         }
     }
     pthread_mutex_unlock(&q->mutex);

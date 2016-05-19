@@ -138,6 +138,7 @@ int decode_interrupt_cb(void *opaque) {
         if (!_is->ic) {
             break;
         }
+//        sleep(1);
         if (av_read_frame(_is->ic, packet)>=0) {
             if (packet->stream_index == _is->audioStream) {
                 packet_queue_put(&_is->audioq, packet);
@@ -164,14 +165,22 @@ int decode_interrupt_cb(void *opaque) {
         
     }
     if (_is && _is->playQueue) {
+        for (int i=0; i<NUM_BUFFERS; i++) {
+            AudioQueueFreeBuffer(_is->playQueue, _is->playBufs[i]);
+        }
         AudioQueueStop(_is->playQueue, true);
         AudioQueueDispose(_is->playQueue, true);
-        _is->playQueue = nil;
+//        _is->playQueue = nil;
+        
+        
+        NSLog(@"avformat_close_input");
+        
+        
     }
     avformat_close_input(&_is->ic);
-    if (_is) {
-        av_free(_is);
-    }
+//    if (_is) {
+//        av_free(_is);
+//    }
 
 }
 
@@ -243,6 +252,9 @@ static void AQueueOutputCallback(
     
     UInt8 *stream = buffer->mAudioData;
     while (len>0) {
+        if (quit) {
+            break;
+        }
         /*  audio_buf_index 和 audio_buf_size 标示我们自己用来放置解码出来的数据的缓冲区，*/
         /*   这些数据待copy到SDL缓冲区， 当audio_buf_index >= audio_buf_size的时候意味着我*/
         /*   们的缓冲为空，没有数据可供copy，这时候需要调用audio_decode_frame来解码出更 */
@@ -251,11 +263,13 @@ static void AQueueOutputCallback(
             audio_data_size = [self audio_decode_frame:&pts];
             if (audio_data_size < 0) {
                 /* silence */
-                _is->audio_buffer_size = 1024;
-                /* 清零，静音 */
+                NSLog(@"audio_data_size < 0");
+                _is->audio_buffer_size = 4096;
+//                /* 清零，静音 */
                 memset(_is->audio_buf, 0, _is->audio_buffer_size);
             }else{
                 _is->audio_buffer_size = audio_data_size;
+                NSLog(@"audio_data_size :%d",audio_data_size);
             }
             _is->audio_buffer_index = 0;
         }
@@ -272,12 +286,12 @@ static void AQueueOutputCallback(
     buffer->mAudioDataByteSize= buffer->mAudioDataBytesCapacity;
     OSStatus state;
     state = AudioQueueEnqueueBuffer(_is->playQueue, buffer, _is->audio_buf_size, _is->packetDesc);
-    if (state != noErr) {
-        printf("AudioQueueEnqueueBuffer error\n");
-    }else{
-        printf("AudioQueueEnqueueBuffer success mAudioDataByteSize :%d \n",buffer->mAudioDataByteSize);
-
-    }
+//    if (state != noErr) {
+//        printf("AudioQueueEnqueueBuffer error\n");
+//    }else{
+//        NSLog(@"AudioQueueEnqueueBuffer success mAudioDataByteSize :%d ",buffer->mAudioDataByteSize);
+//    
+//    }
     
 }
 
@@ -367,15 +381,15 @@ static void AQueueOutputCallback(
 
 #pragma mark - button actions
 -(void)backButtonActions{
-    // do not lock AudioQueueStop, or may be run into deadlock
-    if (_playerState != KBPlayerStateReadError && _is && _is->playQueue) {
-        AudioQueueStop(_is->playQueue, true);
-        AudioQueueDispose(_is->playQueue, true);
-        _is->playQueue = nil;
+    if (_parse_thread) {
+        [_parse_thread cancel];
     }
+    
     quit = 1;
     
     [self dismissViewControllerAnimated:NO completion:nil];
+    // do not lock AudioQueueStop, or may be run into deadlock
+    
 }
 
 #pragma mark - private methods
