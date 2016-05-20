@@ -7,7 +7,8 @@
 //
 
 #import "ViewController.h"
-#import "PlayerController.h"
+//#import "PlayerController.h"
+#import "KBPlayerController2_0.h"
 
 typedef NS_ENUM(NSUInteger, KBVideoType) {
     KBVideoTypeDefault,  //普通视屏
@@ -56,7 +57,7 @@ const NSString *keyVideoUrl = @"keyVideoUrl";
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    PlayerController *vc = [[PlayerController alloc] init];
+    KBPlayerController2_0 *vc = [[KBPlayerController2_0 alloc] init];
     vc.videoDictionary = self.array[indexPath.row];
     [self presentViewController:vc animated:NO completion:nil];
     
