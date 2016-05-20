@@ -64,6 +64,7 @@
 		4C17BB2B1CEEC311008464E0 /* OpenGLView20.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLView20.m; sourceTree = "<group>"; };
 		4C17BB2E1CEEF317008464E0 /* KBPlayerController2_0.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KBPlayerController2_0.h; sourceTree = "<group>"; };
 		4C17BB2F1CEEF317008464E0 /* KBPlayerController2_0.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KBPlayerController2_0.m; sourceTree = "<group>"; };
+		4C17BB311CEF1EB4008464E0 /* ffplay.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ffplay.c; sourceTree = "<group>"; };
 		4C6A4C9F1CEC4EF20027BAA8 /* KBPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KBPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C6A4CA31CEC4EF20027BAA8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4C6A4CA51CEC4EF20027BAA8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -324,6 +325,7 @@
 		4C6A4CA21CEC4EF20027BAA8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4C17BB311CEF1EB4008464E0 /* ffplay.c */,
 				4C86C65A1CED5E4D00F3CD4C /* cuc_ieschool.flv */,
 				4C6A4D9B1CEC684B0027BAA8 /* KBHeader */,
 				4C6A4D751CEC658D0027BAA8 /* Masonry */,
