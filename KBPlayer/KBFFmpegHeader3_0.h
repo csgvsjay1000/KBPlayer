@@ -1,13 +1,13 @@
 //
-//  FFmpegHeader.h
-//  iosAudioPlay
+//  KBFFmpegHeader3_0.h
+//  KBPlayer
 //
-//  Created by chengshenggen on 4/20/16.
+//  Created by chengshenggen on 5/23/16.
 //  Copyright © 2016 Gan Tian. All rights reserved.
 //
 
-#ifndef FFmpegHeader_h
-#define FFmpegHeader_h
+#ifndef KBFFmpegHeader3_0_h
+#define KBFFmpegHeader3_0_h
 
 #import "avformat.h"
 #import "avcodec.h"
@@ -38,22 +38,18 @@ typedef struct PacketQueue{
 }PacketQueue;
 
 typedef struct VideoPicture {
-
+    
     AVFrame* rawdata;
     int width, height; /*source height & width*/
     int allocated;
     double pts;
 } VideoPicture;
 
+
 static void packet_queue_init(PacketQueue *q){
     memset(q, 0, sizeof(PacketQueue));
     pthread_mutex_init(&q->mutex, NULL);
     pthread_cond_init(&q->cond, NULL);
-}
-
-static void packet_queue_destory(PacketQueue *q){
-    pthread_mutex_destroy(&q->mutex);
-    pthread_cond_destroy(&q->cond);
 }
 
 static int packet_queue_put(PacketQueue *q,AVPacket *pkt){
@@ -81,6 +77,40 @@ static int packet_queue_put(PacketQueue *q,AVPacket *pkt){
     pthread_mutex_unlock(&q->mutex);
     return 0;
 }
+
+static int packet_queue_put_nullpacket(PacketQueue *q)
+{
+    AVPacket pkt1, *pkt = &pkt1;
+    av_init_packet(pkt);
+    pkt->data = NULL;
+    pkt->size = 0;
+    return packet_queue_put(q, pkt);
+}
+
+static void packet_queue_flush(PacketQueue *q){
+    AVPacketList *pkt, *pkt1;
+    pthread_mutex_lock(&q->mutex);
+    for (pkt = q->first_pkt; pkt; pkt = pkt1) {
+        pkt1 = pkt->next;
+        av_free_packet(&pkt->pkt);
+        av_freep(&pkt);
+    }
+    q->last_pkt = NULL;
+    q->first_pkt = NULL;
+    q->nb_packets = 0;
+    q->size = 0;
+    pthread_mutex_unlock(&q->mutex);
+    
+}
+
+static void packet_queue_destroy(PacketQueue *q)
+{
+    packet_queue_flush(q);
+    pthread_mutex_destroy(&q->mutex);
+    pthread_cond_destroy(&q->cond);
+
+}
+
 
 int quit = 0;
 
@@ -117,7 +147,7 @@ static int packet_queue_get(PacketQueue *q,AVPacket *pkt,int block){
             outtime.tv_sec = now.tv_sec + 5;
             outtime.tv_nsec = now.tv_usec * 1000;
             pthread_cond_timedwait(&q->cond, &q->mutex, &outtime);
-//            pthread_cond_wait(&q->cond, &q->mutex);
+//                        pthread_cond_wait(&q->cond, &q->mutex);
         }
     }
     pthread_mutex_unlock(&q->mutex);
@@ -126,30 +156,20 @@ static int packet_queue_get(PacketQueue *q,AVPacket *pkt,int block){
 
 typedef struct VideoState {
     char filename[1024];
-    AVFormatContext *ic;
-    int audioStream,videoStream;
-    AVStream *audio_st,*video_st;
-    AVFrame *audio_frame;
-    AVPacket audio_pkt;
-    
-    PacketQueue audioq,videoq;
-    struct SwrContext *swr_ctx;
-    struct SwsContext *sws_ctx;
+    int abort_request;
 
+    AVFormatContext *ic;
     
-    AVIOContext *io_ctx;
-    double audio_clock,video_clock;
-    
-    AudioQueueRef playQueue;
-    
-    AudioStreamBasicDescription format;
-    AudioQueueBufferRef playBufs[NUM_BUFFERS];
-    UInt32 currentPaketsNum;
-    
-    AudioStreamPacketDescription *packetDesc;
-    
+    /** 音频流 */
+    int audio_stream;
+    AVStream *audio_st;
+    AVPacket audio_pkt;
+    AVFrame *audio_frame;
+    struct SwrContext *swr_ctx;
+
+    PacketQueue audioq;
     UInt32 audio_buf_size;
-    
+    double audio_clock;
     unsigned int audio_buffer_index;
     unsigned int audio_buffer_size;
     int audio_pkt_size;
@@ -161,10 +181,21 @@ typedef struct VideoState {
     
     uint8_t *audio_buf;
     DECLARE_ALIGNED(16,uint8_t,audio_buf2) [AVCODEC_MAX_AUDIO_FRAME_SIZE * 4];
+    AudioQueueRef playQueue;
     
-    pthread_mutex_t pictq_mutex;
-    pthread_cond_t pictq_cond;
+    AudioStreamBasicDescription format;
+    AudioQueueBufferRef playBufs[NUM_BUFFERS];
+    UInt32 currentPaketsNum;
     
+    AudioStreamPacketDescription *packetDesc;
+    
+    
+    /** 视频流 */
+    int video_stream;
+    struct SwsContext *sws_ctx;
+    double video_clock;
+    PacketQueue videoq;
+    AVStream *video_st;
     double frame_timer;
     double frame_last_delay;
     int64_t video_current_pts_time;
@@ -175,11 +206,9 @@ typedef struct VideoState {
     
     VideoPicture pictq[VIDEO_PICTURE_QUEUE_SIZE];
     
-    int abort_request;
-
-
-
+    pthread_mutex_t pictq_mutex;
+    pthread_cond_t pictq_cond;
+    
 }VideoState;
 
-
-#endif /* FFmpegHeader_h */
+#endif /* KBFFmpegHeader3_0_h */
