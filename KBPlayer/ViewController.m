@@ -9,7 +9,9 @@
 #import "ViewController.h"
 //#import "PlayerController.h"
 //#import "KBPlayerController2_0.h"
-#import "KBPlayerController3_0.h"
+//#import "KBPlayerController3_0.h"
+//#import "KBPlayerController4_0.h"
+#import "KBPlayerController5_0.h"
 
 typedef NS_ENUM(NSUInteger, KBVideoType) {
     KBVideoTypeDefault,  //普通视屏
@@ -58,7 +60,7 @@ const NSString *keyVideoUrl = @"keyVideoUrl";
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    KBPlayerController3_0 *vc = [[KBPlayerController3_0 alloc] init];
+    KBPlayerController5_0 *vc = [[KBPlayerController5_0 alloc] init];
     vc.videoDictionary = self.array[indexPath.row];
     [self presentViewController:vc animated:NO completion:nil];
     

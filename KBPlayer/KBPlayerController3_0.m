@@ -70,8 +70,8 @@
 }
 
 -(void)dealloc{
-    av_free(_is);
-    _is = NULL;
+//    av_free(_is);
+//    _is = NULL;
     NSLog(@"%@ dealloc",[self class]);
 }
 
@@ -242,7 +242,7 @@ fail:
     
     if (ic) {
         avformat_close_input(&ic);
-        is->ic = NULL;
+//        is->ic = NULL;
     }
     if (packet != NULL) {
 //        av_free_packet(packet);
@@ -685,6 +685,10 @@ static void AQueueOutputCallback(
             av_free(_is->audio_frame);
             break;
         }case AVMEDIA_TYPE_VIDEO:{
+            AVFormatContext *ic = _is->ic;
+            AVCodecContext *codecCtx;
+            codecCtx = ic->streams[_is->video_stream]->codec;
+            avcodec_close(codecCtx);
             sws_freeContext(_is->sws_ctx);
             av_free(_pFrameYUV);
             
