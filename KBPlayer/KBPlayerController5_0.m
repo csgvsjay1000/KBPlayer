@@ -87,6 +87,8 @@
     pthread_mutex_init(&_is->pictq_mutex, NULL);
     pthread_cond_init(&_is->pictq_cond, NULL);
     _read_tid = [[NSThread alloc] initWithTarget:self selector:@selector(read_thread) object:nil];
+    _read_tid.name = @"com.3glasses.vrshow.read";
+
     [_read_tid start];
 }
 
@@ -235,7 +237,7 @@ fail:
     pthread_cond_destroy(&_is->pictq_cond);
     
     av_free(_is);
-    memset(_is, 0, sizeof(VideoState));
+//    memset(_is, 0, sizeof(VideoState));
     _is = NULL;
     
     
@@ -249,7 +251,7 @@ fail:
     avcodec_close(codecCtx);
     
     sws_freeContext(_is->sws_ctx);
-    
+    pthread_cond_signal(&_is->videoq.cond);
     packet_queue_destroy(&_is->videoq);
 }
 
@@ -265,7 +267,8 @@ fail:
     avcodec_close(codecCtx);
     
     swr_free(&_is->swr_ctx);
-    
+    pthread_cond_signal(&_is->audioq.cond);
+
     packet_queue_destroy(&_is->audioq);
 }
 
@@ -464,6 +467,7 @@ static void AQueueOutputCallback(
     packet_queue_init(&_is->audioq);
     AudioQueueStart(_is->playQueue, NULL);
     _audioThread = [[NSThread alloc] initWithTarget:self selector:@selector(playAudioThread) object:nil];
+    _audioThread.name = @"com.3glasses.vrshow.audio";
     [_audioThread start];
     
     
@@ -496,6 +500,7 @@ static void AQueueOutputCallback(
         //        codecCtx->execute2            = avcodec_default_execute2;
         //       codecCtx->release_buffer = our_release_buffer;
         _videoThread = [[NSThread alloc] initWithTarget:self selector:@selector(playVideoThread) object:nil];
+        _videoThread.name = @"com.3glasses.vrshow.video";
         [_videoThread start];
     }
     
@@ -593,6 +598,12 @@ static void AQueueOutputCallback(
     }
     if (_videoThread) {
         [_videoThread cancel];
+    }
+    if (_audioThread) {
+        [_audioThread cancel];
+    }
+    if (_read_tid) {
+        [_read_tid cancel];
     }
 }
 

@@ -145,8 +145,8 @@ static int packet_queue_get(PacketQueue *q,AVPacket *pkt,int block){
             
             outtime.tv_sec = now.tv_sec + 5;
             outtime.tv_nsec = now.tv_usec * 1000;
-            pthread_cond_timedwait(&q->cond, &q->mutex, &outtime);
-            //                        pthread_cond_wait(&q->cond, &q->mutex);
+//            pthread_cond_timedwait(&q->cond, &q->mutex, &outtime);
+                                    pthread_cond_wait(&q->cond, &q->mutex);
         }
     }
     pthread_mutex_unlock(&q->mutex);

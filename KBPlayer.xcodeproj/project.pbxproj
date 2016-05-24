@@ -38,7 +38,7 @@
 		4C6A4D981CEC658D0027BAA8 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6A4D8A1CEC658D0027BAA8 /* NSLayoutConstraint+MASDebugAdditions.m */; };
 		4C6A4D991CEC658D0027BAA8 /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6A4D8C1CEC658D0027BAA8 /* View+MASAdditions.m */; };
 		4C6A4D9A1CEC658D0027BAA8 /* ViewController+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6A4D8F1CEC658D0027BAA8 /* ViewController+MASAdditions.m */; };
-		4C8612A51CF4537300527C0F /* KBPlayerController5_0.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8612A41CF4537300527C0F /* KBPlayerController5_0.m */; };
+		4C8612A81CF45EF000527C0F /* KBPlayerController5_0.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8612A41CF4537300527C0F /* KBPlayerController5_0.m */; };
 		4C86C65B1CED5E4D00F3CD4C /* cuc_ieschool.flv in Resources */ = {isa = PBXBuildFile; fileRef = 4C86C65A1CED5E4D00F3CD4C /* cuc_ieschool.flv */; };
 /* End PBXBuildFile section */
 
@@ -864,7 +864,7 @@
 				4C6A4D931CEC658D0027BAA8 /* MASConstraintMaker.m in Sources */,
 				4C6A4D971CEC658D0027BAA8 /* NSArray+MASAdditions.m in Sources */,
 				4C17BB2C1CEEC311008464E0 /* OpenGLView20.m in Sources */,
-				4C8612A51CF4537300527C0F /* KBPlayerController5_0.m in Sources */,
+				4C8612A81CF45EF000527C0F /* KBPlayerController5_0.m in Sources */,
 				4C6A4D9A1CEC658D0027BAA8 /* ViewController+MASAdditions.m in Sources */,
 				4C6A4D921CEC658D0027BAA8 /* MASConstraint.m in Sources */,
 				4C6A4D941CEC658D0027BAA8 /* MASLayoutConstraint.m in Sources */,
