@@ -14,7 +14,9 @@ typedef enum : NSUInteger {
     KBPlayerStateReadError = 20, //读取数据错误，不在继续读取
     KBPlayerStateReadingNetWeak = 30,  //正在读取数据，网络状态不好
     KBPlayerStateParseFinshed = 40,  //解码完成。
+    KBPlayerStateUserBack = 50,  //用户返回。
     
 } KBPlayerState;
+
 
 #endif /* KBPlayerEnumHeaders_h */

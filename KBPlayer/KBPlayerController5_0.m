@@ -7,12 +7,13 @@
 //
 
 #import "KBPlayerController5_0.h"
-
+#import "KBPlayerEnumHeaders.h"
 #import "KBFFmpegHeader5_0.h"
 #import "VRPlayControlView.h"
 #import "ViewController.h"
 #import "KBPlayerHeader.h"
 #import "OpenGLView20.h"
+#import "CacheView.h"
 
 @interface KBPlayerController5_0 (){
     AVFrame *_pFrameYUV;
@@ -27,7 +28,7 @@
 @property(nonatomic,strong)NSThread *videoThread;
 @property(nonatomic,strong)NSThread *audioThread;
 @property(nonatomic,strong)NSTimer *timer;
-
+@property(nonatomic,assign)KBPlayerState playerState;
 
 @end
 
@@ -39,9 +40,11 @@
     self.view.backgroundColor = [UIColor blackColor];
     [self.view addSubview:self.glView];
     [self.view addSubview:self.controlView];
-    
+    [CacheView show:self.glView];
     [self layoutSubPages];
     if (_videoDictionary[keyVideoUrl]) {
+        av_register_all();
+        avformat_network_init();
         [self schedule_refresh:40];
         [self doInitPlayer];
     }
@@ -76,8 +79,7 @@
 }
 
 -(void)doInitPlayer{
-    av_register_all();
-    avformat_network_init();
+    
     quit = 0;
     _is = av_malloc(sizeof(VideoState));
     if (!_is) {
@@ -90,6 +92,16 @@
     _read_tid.name = @"com.3glasses.vrshow.read";
 
     [_read_tid start];
+}
+
+-(void)reloadPlayer{
+    [self doExit];
+    [CacheView show:self.glView];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self schedule_refresh:40];
+        [self doInitPlayer];
+    });
+
 }
 
 #pragma mark - read thread
@@ -170,12 +182,16 @@ static int decode_interrupt_cb(void *ctx)
     _is->pictq_windex = 0;
     _is->pictq_rindex = 0;
     _is->pictq_size = 0;
-    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [CacheView hide];
+    });
     for (; ; ) {
         if (quit) {
             break;
         }
-        if (_is->videoq.size>MAX_VIDEOQ_SIZE) {
+        if (_is->videoq.size>MAX_VIDEOQ_SIZE || _is->audioq.size>MAX_AUDIOQ_SIZE ) {
+            printf("audioq.size %d, videoq.size %d\n",_is->audioq.size,_is->videoq.size);
+
             usleep(10*1000);
             continue;
         }
@@ -189,7 +205,7 @@ static int decode_interrupt_cb(void *ctx)
             }
         }else{
             if (_is->ic->pb->error == 0) {
-                
+                NSLog(@"no network");
                 if (_is->video_stream>=0) {
                     packet_queue_put_nullpacket(&_is->videoq);
                 }
@@ -200,7 +216,8 @@ static int decode_interrupt_cb(void *ctx)
                 continue;
             }else{
                 NSLog(@"av_read_frame error");
-                
+                [self doExit];
+                ret = 2;
                 break;
             }
         }
@@ -237,10 +254,12 @@ fail:
     pthread_cond_destroy(&_is->pictq_cond);
     
     av_free(_is);
-//    memset(_is, 0, sizeof(VideoState));
     _is = NULL;
-    
-    
+    [CacheView hide];
+
+    if (ret == 2 && _playerState != KBPlayerStateUserBack) {
+        [self reloadPlayer];
+    }
     
 }
 
@@ -301,7 +320,7 @@ fail:
             audio_data_size = [self audio_decode_frame:&pts];
             if (audio_data_size < 0) {
                 /* silence */
-                //                NSLog(@"audio_data_size < 0");
+                NSLog(@"audio_data_size < 0");
                 _is->audio_buffer_size = 4096;
                 //                /* 清零，静音 */
                 memset(_is->audio_buf, 0, _is->audio_buffer_size);
@@ -324,12 +343,12 @@ fail:
     buffer->mAudioDataByteSize= buffer->mAudioDataBytesCapacity;
     OSStatus state;
     state = AudioQueueEnqueueBuffer(_is->playQueue, buffer, _is->audio_buf_size, _is->packetDesc);
-    //    if (state != noErr) {
-    //        printf("AudioQueueEnqueueBuffer error\n");
-    //    }else{
-    //        NSLog(@"AudioQueueEnqueueBuffer success mAudioDataByteSize :%d ",buffer->mAudioDataByteSize);
-    //
-    //    }
+    if (state != noErr) {
+        printf("AudioQueueEnqueueBuffer error\n");
+    }else{
+//        NSLog(@"AudioQueueEnqueueBuffer success mAudioDataByteSize :%d ",buffer->mAudioDataByteSize);
+
+    }
     
 }
 
@@ -370,24 +389,24 @@ fail:
             }
             if (_is->swr_ctx) {
                 const uint8_t **in = (const uint8_t **) _is->audio_frame->extended_data;
-                uint8_t *out[] = { _is->audio_buf2 };
-                len2 = swr_convert(_is->swr_ctx, out, sizeof(_is->audio_buf2) / _is->audio_tgt_channels/av_get_bytes_per_sample(_is->audio_tgt_fmt), in, _is->audio_frame->nb_samples);
+                uint8_t *out[] = { _is->audio_buf };
+                len2 = swr_convert(_is->swr_ctx, out, sizeof(_is->audio_buf) / _is->audio_tgt_channels/av_get_bytes_per_sample(_is->audio_tgt_fmt), in, _is->audio_frame->nb_samples);
                 if (len2 < 0) {
                     fprintf(stderr, "swr_convert() failed\n");
                     break;
                 }
-                if (len2 == sizeof(_is->audio_buf2) / _is->audio_tgt_channels
+                if (len2 == sizeof(_is->audio_buf) / _is->audio_tgt_channels
                     / av_get_bytes_per_sample(_is->audio_tgt_fmt)) {
                     fprintf(stderr,
                             "warning: audio buffer is probably too small\n");
                     swr_init(_is->swr_ctx);
                 }
-                _is->audio_buf = _is->audio_buf2;
+//                _is->audio_buf = _is->audio_buf2;
                 resampled_data_size = len2 * _is->audio_tgt_channels
                 * av_get_bytes_per_sample(_is->audio_tgt_fmt);
             }else {
-                resampled_data_size = decoded_data_size;
-                _is->audio_buf = _is->audio_frame->data[0];
+//                resampled_data_size = decoded_data_size;
+//                _is->audio_buf = _is->audio_frame->data[0];
             }
             pts = _is->audio_clock;
             *pts_ptr = pts;
@@ -490,9 +509,9 @@ static void AQueueOutputCallback(
                                       _is->video_st->codec->height, _is->video_st->codec->pix_fmt,
                                       _is->video_st->codec->width, _is->video_st->codec->height,
                                       AV_PIX_FMT_YUV420P, SWS_FAST_BILINEAR, NULL, NULL, NULL);
-        //        _is->frame_timer = (double) av_gettime() / 1000000.0;
-        //        _is->frame_last_delay = 40e-3;
-        //        _is->video_current_pts_time = av_gettime();
+        _is->frame_timer = (double) av_gettime() / 1000000.0;
+        _is->frame_last_delay = 40e-3;
+        _is->video_current_pts_time = av_gettime();
         packet_queue_init(&_is->videoq);
         //        codecCtx->get_buffer2 = avcodec_default_get_buffer2;
         //        codecCtx->get_format          = avcodec_default_get_format;
@@ -520,7 +539,7 @@ static void AQueueOutputCallback(
         }
         if (packet_queue_get(&_is->videoq, packet, 1) < 0) {
             // means we quit getting packets
-            break;
+            continue;
         }
         pts = 0;
         avcodec_decode_video2(_is->video_st->codec, pFrame, &frameFinished,packet);
@@ -564,6 +583,37 @@ static void AQueueOutputCallback(
         }else{
             vp = &_is->pictq[_is->pictq_rindex];
             
+            _is->video_current_pts = vp->pts;
+            _is->video_current_pts_time = av_gettime();
+            
+            delay = vp->pts - _is->frame_last_pts; /* the pts from last time */
+            if (delay <= 0 || delay >= 1.0) {
+                /* if incorrect delay, use previous one */
+                delay = _is->frame_last_delay;
+            }
+            /* save for next time */
+            _is->frame_last_delay = delay;
+            _is->frame_last_pts = vp->pts;
+            
+            ref_clock = [self get_audio_clock];
+            diff = vp->pts - ref_clock;
+            sync_threshold =
+            (delay > AV_SYNC_THRESHOLD) ? delay : AV_SYNC_THRESHOLD;
+            if (fabs(diff) < AV_NOSYNC_THRESHOLD) {
+                if (diff <= -sync_threshold) {
+                    delay = 0;
+                } else if (diff >= sync_threshold) {
+                    delay = 2 * delay;
+                }
+            }
+            _is->frame_timer += delay;
+            /* computer the REAL delay */
+            actual_delay = _is->frame_timer - (av_gettime() / 1000000.0);
+            if (actual_delay < 0.010) {
+                /* Really it should skip the picture instead */
+                actual_delay = 0.010;
+            }
+            [self schedule_refresh:(int) (actual_delay * 1000 + 0.5)];
             [self video_display];
             
             if (++_is->pictq_rindex == VIDEO_PICTURE_QUEUE_SIZE) {
@@ -578,6 +628,23 @@ static void AQueueOutputCallback(
         [self schedule_refresh:100];
     }
 }
+
+-(double)get_audio_clock{
+    double pts;
+    int hw_buf_size, bytes_per_sec, n;
+    pts = _is->audio_clock; /* maintained in the audio thread */
+    hw_buf_size = _is->audio_buffer_size - _is->audio_buffer_index;
+    bytes_per_sec = 0;
+    n = _is->audio_st->codec->channels * 2;
+    if (_is->audio_st) {
+        bytes_per_sec = _is->audio_st->codec->sample_rate * n;
+    }
+    if (bytes_per_sec) {
+        pts -= (double) hw_buf_size / bytes_per_sec;
+    }
+    return pts;
+}
+
 
 -(void)video_display{
     if (_pFrameYUV && _pFrameYUV->data[0]!=NULL) {
@@ -598,12 +665,15 @@ static void AQueueOutputCallback(
     }
     if (_videoThread) {
         [_videoThread cancel];
+        _videoThread = nil;
     }
     if (_audioThread) {
         [_audioThread cancel];
+        _audioThread = nil;
     }
     if (_read_tid) {
         [_read_tid cancel];
+        _read_tid = nil;
     }
 }
 
@@ -656,6 +726,7 @@ static void AQueueOutputCallback(
 
 #pragma mark - button actions
 -(void)backButtonActions{
+    _playerState = KBPlayerStateUserBack;
     [self doExit];
     [self dismissViewControllerAnimated:NO completion:nil];
     // do not lock AudioQueueStop, or may be run into deadlock

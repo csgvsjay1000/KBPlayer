@@ -143,10 +143,11 @@ static int packet_queue_get(PacketQueue *q,AVPacket *pkt,int block){
             struct timespec outtime;
             gettimeofday(&now, NULL);
             
-            outtime.tv_sec = now.tv_sec + 5;
+            outtime.tv_sec = now.tv_sec + 10;
             outtime.tv_nsec = now.tv_usec * 1000;
-//            pthread_cond_timedwait(&q->cond, &q->mutex, &outtime);
-                                    pthread_cond_wait(&q->cond, &q->mutex);
+            pthread_cond_timedwait(&q->cond, &q->mutex, &outtime);
+//            pthread_cond_wait(&q->cond, &q->mutex);
+            break;
         }
     }
     pthread_mutex_unlock(&q->mutex);
@@ -191,8 +192,10 @@ typedef struct VideoState {
     int64_t audio_tgt_channel_layout;
     int audio_tgt_freq;
     
-    uint8_t *audio_buf;
-    DECLARE_ALIGNED(16,uint8_t,audio_buf2) [AVCODEC_MAX_AUDIO_FRAME_SIZE * 4];
+//    uint8_t *audio_buf;
+    DECLARE_ALIGNED(16,uint8_t,audio_buf) [AVCODEC_MAX_AUDIO_FRAME_SIZE * 4];
+
+//    DECLARE_ALIGNED(16,uint8_t,audio_buf2) [AVCODEC_MAX_AUDIO_FRAME_SIZE * 4];
     AudioQueueRef playQueue;
     
     AudioStreamBasicDescription format;
@@ -200,6 +203,12 @@ typedef struct VideoState {
     UInt32 currentPaketsNum;
     
     AudioStreamPacketDescription *packetDesc;
+    
+    double frame_timer;
+    double frame_last_delay;
+    int64_t video_current_pts_time;
+    double video_current_pts;
+    double frame_last_pts;
     
     
 }VideoState;

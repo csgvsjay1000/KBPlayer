@@ -73,7 +73,7 @@ typedef enum : NSUInteger {
     pthread_mutex_init(&_is->pictq_mutex, NULL);
     pthread_cond_init(&_is->pictq_cond, NULL);
 
-//    [self schedule_refresh:40];
+    [self schedule_refresh:40];
     
     _parse_thread = [[NSThread alloc] initWithTarget:self selector:@selector(decode_thread) object:nil];
     [_parse_thread start];
@@ -168,6 +168,7 @@ typedef enum : NSUInteger {
 
 -(void)video_display{
     if (_pFrameYUV->data[0]!=NULL) {
+        printf("audio_clock %f, video_clock %f\n",_is->audio_clock,_is->video_clock);
         [_glView displayYUV420pData:_pFrameYUV->data[0] width:_is->video_st->codec->width height:_is->video_st->codec->height];
         [_glView displayYUV420pData:_pFrameYUV->data[0] width:_is->video_st->codec->width height:_is->video_st->codec->height];
     }
@@ -223,38 +224,38 @@ int decode_interrupt_cb(void *opaque) {
             break;
         }
     }
-//    for (i = 0; i < _is->ic->nb_streams; i++) {
-//        if (_is->ic->streams[i]->codec->codec_type == AVMEDIA_TYPE_VIDEO) {
-//            _is->video_st = _is->ic->streams[i];
-//            _is->videoStream = i;
-//            break;
-//        }
-//    }
+    for (i = 0; i < _is->ic->nb_streams; i++) {
+        if (_is->ic->streams[i]->codec->codec_type == AVMEDIA_TYPE_VIDEO) {
+            _is->video_st = _is->ic->streams[i];
+            _is->videoStream = i;
+            break;
+        }
+    }
     if (_is->audioStream>=0) {
         [self audio_stream_component_open:_is->audioStream];
     }
-//    if (_is->videoStream>=0) {
-//        [self video_stream_component_open:_is->videoStream];
-//    }
-//    
-//    VideoPicture *vp;
-//    vp = &_is->pictq[_is->pictq_windex];
-//    if (vp->rawdata) {
-//        av_free(vp->rawdata);
-//    }
-//    _pFrameYUV = av_frame_alloc();
-//    if (_pFrameYUV == NULL)
-//        return;
-//    vp->width = _is->video_st->codec->width;
-//    vp->height = _is->video_st->codec->height;
-//    
-//    int numBytes = avpicture_get_size(AV_PIX_FMT_YUV420P, vp->width,
-//                                      vp->height);
-//    
-//    uint8_t* buffer = (uint8_t *) av_malloc(numBytes * sizeof(uint8_t));
-//    
-//    avpicture_fill((AVPicture *) _pFrameYUV, buffer, AV_PIX_FMT_YUV420P,
-//                   vp->width, vp->height);
+    if (_is->videoStream>=0) {
+        [self video_stream_component_open:_is->videoStream];
+    }
+    
+    VideoPicture *vp;
+    vp = &_is->pictq[_is->pictq_windex];
+    if (vp->rawdata) {
+        av_free(vp->rawdata);
+    }
+    _pFrameYUV = av_frame_alloc();
+    if (_pFrameYUV == NULL)
+        return;
+    vp->width = _is->video_st->codec->width;
+    vp->height = _is->video_st->codec->height;
+    
+    int numBytes = avpicture_get_size(AV_PIX_FMT_YUV420P, vp->width,
+                                      vp->height);
+    
+    uint8_t* buffer = (uint8_t *) av_malloc(numBytes * sizeof(uint8_t));
+    
+    avpicture_fill((AVPicture *) _pFrameYUV, buffer, AV_PIX_FMT_YUV420P,
+                   vp->width, vp->height);
 
     
     AVPacket pkt1, *packet = &pkt1;
@@ -276,7 +277,7 @@ int decode_interrupt_cb(void *opaque) {
             if (packet->stream_index == _is->audioStream) {
                 packet_queue_put(&_is->audioq, packet);
             }else if (packet->stream_index == _is->videoStream) {
-//                packet_queue_put(&_is->videoq, packet);
+                packet_queue_put(&_is->videoq, packet);
             } else {
                 av_free_packet(packet);
             }
@@ -303,7 +304,7 @@ int decode_interrupt_cb(void *opaque) {
         }
         AudioQueueStop(_is->playQueue, true);
         AudioQueueDispose(_is->playQueue, true);
-//        _is->playQueue = nil;
+        _is->playQueue = nil;
         
         
         NSLog(@"avformat_close_input");
@@ -535,13 +536,11 @@ static void AQueueOutputCallback(
             audio_data_size = [self audio_decode_frame:&pts];
             if (audio_data_size < 0) {
                 /* silence */
-                NSLog(@"audio_data_size < 0");
                 _is->audio_buffer_size = 4096;
 //                /* 清零，静音 */
                 memset(_is->audio_buf, 0, _is->audio_buffer_size);
             }else{
                 _is->audio_buffer_size = audio_data_size;
-                NSLog(@"audio_data_size :%d",audio_data_size);
             }
             _is->audio_buffer_index = 0;
         }

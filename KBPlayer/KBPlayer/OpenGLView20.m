@@ -437,7 +437,6 @@ void main(void)\
     gettimeofday(&nowtime, NULL);
     if (nowtime.tv_sec != _time.tv_sec)
     {
-        printf("视频 %ld 帧率:   %ld\n", self.tag, _frameRate);
         memcpy(&_time, &nowtime, sizeof(struct timeval));
     }
     
