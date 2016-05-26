@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C07F8201CF7087500382BAD /* KBPlayerController6_0.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C07F81F1CF7087500382BAD /* KBPlayerController6_0.m */; };
+		4C07F8231CF708BA00382BAD /* KBPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C07F8221CF708BA00382BAD /* KBPlayer.m */; };
 		4C17BB2C1CEEC311008464E0 /* OpenGLView20.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C17BB2B1CEEC311008464E0 /* OpenGLView20.m */; };
 		4C31C8531CF584800012B679 /* KBPlayerController5_0.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8612A41CF4537300527C0F /* KBPlayerController5_0.m */; };
 		4C31C8561CF58B320012B679 /* CacheView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C31C8551CF58B320012B679 /* CacheView.m */; };
@@ -61,6 +63,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4C07F81D1CF7084E00382BAD /* KBFFmpegHeader6_0.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KBFFmpegHeader6_0.h; sourceTree = "<group>"; };
+		4C07F81E1CF7087500382BAD /* KBPlayerController6_0.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KBPlayerController6_0.h; sourceTree = "<group>"; };
+		4C07F81F1CF7087500382BAD /* KBPlayerController6_0.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KBPlayerController6_0.m; sourceTree = "<group>"; };
+		4C07F8211CF708BA00382BAD /* KBPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KBPlayer.h; sourceTree = "<group>"; };
+		4C07F8221CF708BA00382BAD /* KBPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KBPlayer.m; sourceTree = "<group>"; };
 		4C17BB2A1CEEC30B008464E0 /* OpenGLView20.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenGLView20.h; sourceTree = "<group>"; };
 		4C17BB2B1CEEC311008464E0 /* OpenGLView20.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLView20.m; sourceTree = "<group>"; };
 		4C17BB2E1CEEF317008464E0 /* KBPlayerController2_0.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KBPlayerController2_0.h; sourceTree = "<group>"; };
@@ -285,6 +292,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4C07F81C1CF707EF00382BAD /* 6_0 */ = {
+			isa = PBXGroup;
+			children = (
+				4C07F81D1CF7084E00382BAD /* KBFFmpegHeader6_0.h */,
+				4C07F81E1CF7087500382BAD /* KBPlayerController6_0.h */,
+				4C07F81F1CF7087500382BAD /* KBPlayerController6_0.m */,
+				4C07F8211CF708BA00382BAD /* KBPlayer.h */,
+				4C07F8221CF708BA00382BAD /* KBPlayer.m */,
+			);
+			name = 6_0;
+			sourceTree = "<group>";
+		};
 		4C17BB2D1CEEF2ED008464E0 /* 2_0 */ = {
 			isa = PBXGroup;
 			children = (
@@ -338,6 +357,7 @@
 				4C1DDD591CF2C96A003AA4C2 /* 3_0 */,
 				4C8612971CF3EDFC00527C0F /* 4_0 */,
 				4C8612A21CF4533A00527C0F /* 5_0 */,
+				4C07F81C1CF707EF00382BAD /* 6_0 */,
 				4C6A4D721CEC64C60027BAA8 /* VRPlayControlView.h */,
 				4C6A4D731CEC64C60027BAA8 /* VRPlayControlView.m */,
 				4C6A4CAB1CEC4EF30027BAA8 /* Main.storyboard */,
@@ -863,6 +883,7 @@
 				4C6A4D961CEC658D0027BAA8 /* MASViewConstraint.m in Sources */,
 				4C6A4D741CEC64C60027BAA8 /* VRPlayControlView.m in Sources */,
 				4C6A4CA71CEC4EF20027BAA8 /* AppDelegate.m in Sources */,
+				4C07F8201CF7087500382BAD /* KBPlayerController6_0.m in Sources */,
 				4C6A4D991CEC658D0027BAA8 /* View+MASAdditions.m in Sources */,
 				4C6A4D911CEC658D0027BAA8 /* MASCompositeConstraint.m in Sources */,
 				4C6A4D951CEC658D0027BAA8 /* MASViewAttribute.m in Sources */,
@@ -870,6 +891,7 @@
 				4C6A4D971CEC658D0027BAA8 /* NSArray+MASAdditions.m in Sources */,
 				4C31C8561CF58B320012B679 /* CacheView.m in Sources */,
 				4C17BB2C1CEEC311008464E0 /* OpenGLView20.m in Sources */,
+				4C07F8231CF708BA00382BAD /* KBPlayer.m in Sources */,
 				4C6A4D9A1CEC658D0027BAA8 /* ViewController+MASAdditions.m in Sources */,
 				4C31C8531CF584800012B679 /* KBPlayerController5_0.m in Sources */,
 				4C6A4D921CEC658D0027BAA8 /* MASConstraint.m in Sources */,
