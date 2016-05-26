@@ -285,6 +285,8 @@ fail:
     codecCtx = ic->streams[_is->audio_stream]->codec;
     avcodec_close(codecCtx);
     
+    free(_is->packetDesc);
+    
     swr_free(&_is->swr_ctx);
     pthread_cond_signal(&_is->audioq.cond);
 
@@ -513,11 +515,6 @@ static void AQueueOutputCallback(
         _is->frame_last_delay = 40e-3;
         _is->video_current_pts_time = av_gettime();
         packet_queue_init(&_is->videoq);
-        //        codecCtx->get_buffer2 = avcodec_default_get_buffer2;
-        //        codecCtx->get_format          = avcodec_default_get_format;
-        //        codecCtx->execute             = avcodec_default_execute;
-        //        codecCtx->execute2            = avcodec_default_execute2;
-        //       codecCtx->release_buffer = our_release_buffer;
         _videoThread = [[NSThread alloc] initWithTarget:self selector:@selector(playVideoThread) object:nil];
         _videoThread.name = @"com.3glasses.vrshow.video";
         [_videoThread start];
@@ -577,7 +574,7 @@ static void AQueueOutputCallback(
     }
     VideoPicture *vp;
     double actual_delay, delay, sync_threshold, ref_clock, diff;
-    if (_is->video_st) {
+    if (_is && _is->video_st) {
         if (_is->pictq_size == 0) {
             [self schedule_refresh:1];
         }else{
@@ -645,7 +642,6 @@ static void AQueueOutputCallback(
     return pts;
 }
 
-
 -(void)video_display{
     if (_pFrameYUV && _pFrameYUV->data[0]!=NULL) {
         [_glView displayYUV420pData:_pFrameYUV->data[0] width:_is->video_st->codec->width height:_is->video_st->codec->height];
@@ -675,6 +671,8 @@ static void AQueueOutputCallback(
         [_read_tid cancel];
         _read_tid = nil;
     }
+    avformat_network_deinit();
+
 }
 
 #pragma mark - synchronize video clock
