@@ -1,33 +1,29 @@
 //
-//  KBPlayerController6_0.m
+//  KBPlayerController7_0.m
 //  KBPlayer
 //
-//  Created by chengshenggen on 5/26/16.
+//  Created by chengshenggen on 5/27/16.
 //  Copyright © 2016 Gan Tian. All rights reserved.
 //
 
-#import "KBPlayerController6_0.h"
-#import "KBPlayer.h"
+#import "KBPlayerController7_0.h"
+#import "KBPlayer7_0.h"
 #import "ViewController.h"
 #import "VRPlayControlView.h"
 #import "KBPlayerHeader.h"
 
+@interface KBPlayerController7_0 ()
 
-@interface KBPlayerController6_0 ()
-
-@property(nonatomic,strong)KBPlayer *kbplayer;
+@property(nonatomic,strong)KBPlayer7_0 *kbplayer;
 @property(nonatomic,strong)VRPlayControlView *controlView;
-
 
 @end
 
-@implementation KBPlayerController6_0
+@implementation KBPlayerController7_0
 
-#pragma mark - life cycle
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     if (_videoDictionary[keyVideoUrl]) {
         [self.view addSubview:self.kbplayer];
         [self.kbplayer preparePlayWithUrlStr:_videoDictionary[keyVideoUrl]];
@@ -35,7 +31,6 @@
     }
     [self.view addSubview:self.controlView];
     [self layoutSubPages];
-    
 }
 
 -(void)layoutSubPages{
@@ -44,8 +39,21 @@
     }];
 }
 
--(void)dealloc{
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
 
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    _kbplayer.frame = self.view.bounds;
+    [_kbplayer refreshFrame];
+    
+}
+
+
+-(void)dealloc{
+    
     NSLog(@"%@ dealloc",[self class]);
 }
 
@@ -55,14 +63,9 @@
 }
 
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 #pragma mark - button actions
 -(void)backButtonActions{
-//    [_kbplayer stop];
+    //    [_kbplayer stop];
     [_kbplayer destoryPlayer];
     [self dismissViewControllerAnimated:NO completion:nil];
     // do not lock AudioQueueStop, or may be run into deadlock
@@ -78,14 +81,11 @@
     return _controlView;
 }
 
-
--(KBPlayer *)kbplayer{
+-(KBPlayer7_0 *)kbplayer{
     if (_kbplayer == nil) {
-        _kbplayer = [[KBPlayer alloc] initWithFrame:self.view.bounds];
+        _kbplayer = [[KBPlayer7_0 alloc] initWithFrame:self.view.bounds];
     }
     return _kbplayer;
 }
-
-
 
 @end

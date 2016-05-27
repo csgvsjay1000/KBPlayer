@@ -11,7 +11,9 @@
 //#import "KBPlayerController2_0.h"
 //#import "KBPlayerController3_0.h"
 //#import "KBPlayerController4_0.h"
-#import "KBPlayerController5_0.h"
+//#import "KBPlayerController5_0.h"  // 直播封装在Controller里，功能比较完整  版本1.0.0
+//#import "KBPlayerController6_0.h"
+#import "KBPlayerController7_0.h"    //直播封装到uiview里面，使外面controller使用方便  版本2.0.0
 
 typedef NS_ENUM(NSUInteger, KBVideoType) {
     KBVideoTypeDefault,  //普通视屏
@@ -60,7 +62,7 @@ const NSString *keyVideoUrl = @"keyVideoUrl";
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    KBPlayerController5_0 *vc = [[KBPlayerController5_0 alloc] init];
+    KBPlayerController7_0 *vc = [[KBPlayerController7_0 alloc] init];
     vc.videoDictionary = self.array[indexPath.row];
     [self presentViewController:vc animated:NO completion:nil];
     
@@ -85,7 +87,7 @@ const NSString *keyVideoUrl = @"keyVideoUrl";
         [_array addObject:@{
                             keyVideoType:[NSNumber numberWithInteger:KBVideoTypeDefault],
                             keyVideoTypeValue:@"普通视屏"}];
-//        NSString *path = [[NSBundle mainBundle] pathForResource:@"cuc_ieschool" ofType:@"flv"];
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"mp4"];
         
         //rtmp://live.hkstv.hk.lxdns.com/live/hks  香港卫视直播流
         //rtmp://0fwc91.live1-rtmp.z1.pili.qiniucdn.com/shutong/test1
