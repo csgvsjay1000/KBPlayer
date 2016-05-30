@@ -13,6 +13,7 @@
 		4C5B298B1CF821AF0000ECCD /* KBPlayerController7_0.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5B298A1CF821AF0000ECCD /* KBPlayerController7_0.m */; };
 		4C5B29961CF8319B0000ECCD /* KBPlayer8_0.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5B29951CF8319B0000ECCD /* KBPlayer8_0.m */; };
 		4C5B29991CF831B90000ECCD /* KBPlayerController8_0.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5B29981CF831B90000ECCD /* KBPlayerController8_0.m */; };
+		4C61B2001CFC385A0011201B /* PanormalOpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C61B1FF1CFC385A0011201B /* PanormalOpenGLView.m */; };
 		4C6A4CA41CEC4EF20027BAA8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6A4CA31CEC4EF20027BAA8 /* main.m */; };
 		4C6A4CA71CEC4EF20027BAA8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6A4CA61CEC4EF20027BAA8 /* AppDelegate.m */; };
 		4C6A4CAA1CEC4EF30027BAA8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6A4CA91CEC4EF30027BAA8 /* ViewController.m */; };
@@ -89,6 +90,8 @@
 		4C5B29951CF8319B0000ECCD /* KBPlayer8_0.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KBPlayer8_0.m; sourceTree = "<group>"; };
 		4C5B29971CF831B90000ECCD /* KBPlayerController8_0.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KBPlayerController8_0.h; sourceTree = "<group>"; };
 		4C5B29981CF831B90000ECCD /* KBPlayerController8_0.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KBPlayerController8_0.m; sourceTree = "<group>"; };
+		4C61B1FE1CFC385A0011201B /* PanormalOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PanormalOpenGLView.h; sourceTree = "<group>"; };
+		4C61B1FF1CFC385A0011201B /* PanormalOpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PanormalOpenGLView.m; sourceTree = "<group>"; };
 		4C6A4C9F1CEC4EF20027BAA8 /* KBPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KBPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C6A4CA31CEC4EF20027BAA8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4C6A4CA51CEC4EF20027BAA8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -711,6 +714,8 @@
 				4C1DDD561CF2A439003AA4C2 /* KBPlayerEnumHeaders.h */,
 				4C17BB2A1CEEC30B008464E0 /* OpenGLView20.h */,
 				4C17BB2B1CEEC311008464E0 /* OpenGLView20.m */,
+				4C61B1FE1CFC385A0011201B /* PanormalOpenGLView.h */,
+				4C61B1FF1CFC385A0011201B /* PanormalOpenGLView.m */,
 				4C31C8541CF58B320012B679 /* CacheView.h */,
 				4C31C8551CF58B320012B679 /* CacheView.m */,
 			);
@@ -911,6 +916,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C61B2001CFC385A0011201B /* PanormalOpenGLView.m in Sources */,
 				4C6A4D981CEC658D0027BAA8 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				4C6A4CAA1CEC4EF30027BAA8 /* ViewController.m in Sources */,
 				4C6A4D961CEC658D0027BAA8 /* MASViewConstraint.m in Sources */,

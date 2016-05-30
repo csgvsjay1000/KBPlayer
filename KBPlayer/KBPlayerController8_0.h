@@ -10,4 +10,6 @@
 
 @interface KBPlayerController8_0 : UIViewController
 
+@property(nonatomic,strong)NSDictionary *videoDictionary;
+
 @end

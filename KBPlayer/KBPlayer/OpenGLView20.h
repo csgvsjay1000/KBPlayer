@@ -13,6 +13,7 @@
 #import <OpenGLES/EAGL.h>
 #include <sys/time.h>
 #import <CoreMotion/CoreMotion.h>
+#import "KBPlayerEnumHeaders.h"
 
 @interface OpenGLView20 : UIView
 {

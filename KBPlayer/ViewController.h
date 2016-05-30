@@ -11,6 +11,7 @@
 extern NSString *keyVideoType;
 extern NSString *keyVideoTypeValue;
 extern NSString *keyVideoUrl;
+extern NSString *keyNetType;
 
 @interface ViewController : UIViewController
 

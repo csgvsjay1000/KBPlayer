@@ -14,8 +14,7 @@
 @property(nonatomic,strong)UIView *topView;  //顶部视图，放置返回按钮、视屏标题
 @property(nonatomic,strong)UIView *bottomView;  //底部视图，放置播放按钮、当前播放时间、进度条、视屏时长。（直播没有底部视图）
 
-@property(nonatomic,strong)UILabel *currentTimeLabel;
-@property(nonatomic,strong)UILabel *totalTimeLabel;
+
 
 @end
 

@@ -7,23 +7,22 @@
 //
 
 #import "ViewController.h"
+#import "KBPlayerEnumHeaders.h"
+
 //#import "PlayerController.h"
 //#import "KBPlayerController2_0.h"
 //#import "KBPlayerController3_0.h"
 //#import "KBPlayerController4_0.h"
 //#import "KBPlayerController5_0.h"  // 直播封装在Controller里，功能比较完整  版本1.0.0
 //#import "KBPlayerController6_0.h"
-#import "KBPlayerController7_0.h"    //直播封装到uiview里面，使外面controller使用方便  版本2.0.0
+//#import "KBPlayerController7_0.h"    //直播封装到uiview里面，使外面controller使用方便  版本2.0.0
+#import "KBPlayerController8_0.h"
 
-typedef NS_ENUM(NSUInteger, KBVideoType) {
-    KBVideoTypeDefault,  //普通视屏
-    KBVideoTypePanorama,  //全景视屏
-    KBVideoTypePanoramaUpAndDown  //上下全景
-};
 
 const NSString *keyVideoType = @"keyVideoType";
 const NSString *keyVideoTypeValue = @"keyVideoTypeValue";
 const NSString *keyVideoUrl = @"keyVideoUrl";
+const NSString *keyNetType = @"keyNetType";
 
 @interface ViewController ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -62,7 +61,7 @@ const NSString *keyVideoUrl = @"keyVideoUrl";
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    KBPlayerController7_0 *vc = [[KBPlayerController7_0 alloc] init];
+    KBPlayerController8_0 *vc = [[KBPlayerController8_0 alloc] init];
     vc.videoDictionary = self.array[indexPath.row];
     [self presentViewController:vc animated:NO completion:nil];
     
@@ -72,7 +71,8 @@ const NSString *keyVideoUrl = @"keyVideoUrl";
 
 -(UITableView *)tableView{
     if (_tableView == nil) {
-        _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        CGRect frame = CGRectMake(0, 20, self.view.bounds.size.width, self.view.bounds.size.height-20);
+        _tableView = [[UITableView alloc] initWithFrame:frame style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate = self;
         [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
@@ -83,21 +83,37 @@ const NSString *keyVideoUrl = @"keyVideoUrl";
 -(NSMutableArray *)array{
     if (_array == nil) {
         _array = [[NSMutableArray alloc] init];
-        
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"cuc_ieschool" ofType:@"flv"];
+
         [_array addObject:@{
-                            keyVideoType:[NSNumber numberWithInteger:KBVideoTypeDefault],
-                            keyVideoTypeValue:@"普通视屏"}];
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"mp4"];
+                            keyVideoType:[NSNumber numberWithInteger:KBPlayerVideoTypeNormal],
+                            keyVideoTypeValue:@"本地普通视屏",
+                            keyVideoUrl:path,
+                            keyNetType:[NSNumber numberWithInteger:KBPlayerNetTypeLocal]}];
         
         //rtmp://live.hkstv.hk.lxdns.com/live/hks  香港卫视直播流
         //rtmp://0fwc91.live1-rtmp.z1.pili.qiniucdn.com/shutong/test1
         [_array addObject:@{
-                            keyVideoType:[NSNumber numberWithInteger:KBVideoTypePanorama],
-                            keyVideoTypeValue:@"全景视屏",
-                            keyVideoUrl:@"rtmp://live.hkstv.hk.lxdns.com/live/hks"}];
+                            keyVideoType:[NSNumber numberWithInteger:KBPlayerVideoTypeNormal],
+                            keyVideoTypeValue:@"香港卫视直播",
+                            keyVideoUrl:@"rtmp://live.hkstv.hk.lxdns.com/live/hks",
+                            keyNetType:[NSNumber numberWithInteger:KBPlayerNetTypeLive]}];
         [_array addObject:@{
-                            keyVideoType:[NSNumber numberWithInteger:KBVideoTypePanoramaUpAndDown],
-                            keyVideoTypeValue:@"上下全景"}];
+                            keyVideoType:[NSNumber numberWithInteger:KBPlayerVideoTypeNormal],
+                            keyVideoTypeValue:@"全景直播",
+                            keyVideoUrl:@"rtmp://0fwc91.live1-rtmp.z1.pili.qiniucdn.com/shutong/test1",
+                            keyNetType:[NSNumber numberWithInteger:KBPlayerNetTypeLocal]}];
+        NSString *path_panormal = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"mp4"];
+
+        [_array addObject:@{
+                            keyVideoType:[NSNumber numberWithInteger:KBPlayerVideoTypePanorama],
+                            keyVideoTypeValue:@"本地全景视频",
+                            keyVideoUrl:path_panormal,
+                            keyNetType:[NSNumber numberWithInteger:KBPlayerNetTypeLocal]}];
+        [_array addObject:@{
+                            keyVideoType:[NSNumber numberWithInteger:KBPlayerVideoTypeNormal],
+                            keyVideoTypeValue:@"本地上下全景",
+                            keyNetType:[NSNumber numberWithInteger:KBPlayerNetTypeLocal]}];
         
         
     }

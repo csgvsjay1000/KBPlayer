@@ -19,4 +19,22 @@ typedef enum : NSUInteger {
 } KBPlayerState;
 
 
+typedef enum : NSUInteger {
+    KBPlayerPlayingStatePlaying = 10,  //正在播放
+    KBPlayerPlayingStatePause = 20, //暂停
+    
+} KBPlayerPlayingState;
+
+typedef enum : NSUInteger {
+    KBPlayerNetTypeNetwork = 10,  //网络视频
+    KBPlayerNetTypeLocal = 20, //本地视频
+    KBPlayerNetTypeLive = 30,  //直播
+} KBPlayerNetType;
+
+typedef enum : NSUInteger {
+    KBPlayerVideoTypeNormal = 10,  //普通视频
+    KBPlayerVideoTypePanorama = 20, //全景视频
+    
+} KBPlayerVideoType;
+
 #endif /* KBPlayerEnumHeaders_h */

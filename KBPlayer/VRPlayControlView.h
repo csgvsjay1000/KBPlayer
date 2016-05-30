@@ -16,5 +16,7 @@
 @property(nonatomic,strong)UISlider *slider;
 @property(nonatomic,strong)UIProgressView *progressView;
 
+@property(nonatomic,strong)UILabel *currentTimeLabel;
+@property(nonatomic,strong)UILabel *totalTimeLabel;
 
 @end

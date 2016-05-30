@@ -1,13 +1,16 @@
 //
-//  OpenGLView.m
-//  MyTest
+//  PanormalOpenGLView.m
+//  KBPlayer
 //
-//  Created by smy on 12/20/11.
-//  Copyright (c) 2011 ZY.SYM. All rights reserved.
+//  Created by chengshenggen on 5/30/16.
+//  Copyright © 2016 Gan Tian. All rights reserved.
 //
 
-#import "OpenGLView20.h"
-#import <AVFoundation/AVFoundation.h>
+#import "PanormalOpenGLView.h"
+#import <GLKit/GLKit.h>
+
+#define ES_PI  (3.1415927f)
+
 
 enum AttribEnum
 {
@@ -24,50 +27,78 @@ enum TextureType
     TEXC
 };
 
-//#define PRINT_CALL 1
-
-@interface OpenGLView20()
+@interface PanormalOpenGLView ()
 
 
-@property(nonatomic,assign)KBPlayerVideoType videoType;
 
-/** 
- 初始化YUV纹理
- */
-- (void)setupYUVTexture;
-
-/** 
- 创建缓冲区
- @return 成功返回TRUE 失败返回FALSE
- */
-- (BOOL)createFrameAndRenderBuffer;
-
-/** 
- 销毁缓冲区
- */
-- (void)destoryFrameAndRenderBuffer;
-
-//加载着色器
-/** 
- 初始化YUV纹理
- */
-- (void)loadShader;
-
-/** 
- 编译着色代码
- @param shader        代码
- @param shaderType    类型
- @return 成功返回着色器 失败返回－1
- */
-- (GLuint)compileShader:(NSString*)shaderCode withType:(GLenum)shaderType;
-
-/** 
- 渲染
- */
-- (void)render;
 @end
 
-@implementation OpenGLView20
+@implementation PanormalOpenGLView
+
+int esGenSphere ( int numSlices, float radius, float **vertices, float **normals,
+                 float **texCoords, uint16_t **indices, int *numVertices_out) {
+    int i;
+    int j;
+    int numParallels = numSlices / 2;
+    int numVertices = ( numParallels + 1 ) * ( numSlices + 1 );
+    int numIndices = numParallels * numSlices * 6;
+    float angleStep = (2.0f * ES_PI) / ((float) numSlices);
+    
+    if ( vertices != NULL )
+        *vertices = malloc ( sizeof(float) * 3 * numVertices );
+    
+    // Pas besoin des normals pour l'instant
+    //    if ( normals != NULL )
+    //        *normals = malloc ( sizeof(float) * 3 * numVertices );
+    
+    if ( texCoords != NULL )
+        *texCoords = malloc ( sizeof(float) * 2 * numVertices );
+    
+    if ( indices != NULL )
+        *indices = malloc ( sizeof(uint16_t) * numIndices );
+    
+    for ( i = 0; i < numParallels + 1; i++ ) {
+        for ( j = 0; j < numSlices + 1; j++ ) {
+            int vertex = ( i * (numSlices + 1) + j ) * 3;
+            
+            if ( vertices ) {
+                (*vertices)[vertex + 0] = radius * sinf ( angleStep * (float)i ) *
+                sinf ( angleStep * (float)j );
+                (*vertices)[vertex + 1] = radius * cosf ( angleStep * (float)i );
+                (*vertices)[vertex + 2] = radius * sinf ( angleStep * (float)i ) *
+                cosf ( angleStep * (float)j );
+            }
+            
+            if (texCoords) {
+                int texIndex = ( i * (numSlices + 1) + j ) * 2;
+                (*texCoords)[texIndex + 0] = (float) j / (float) numSlices;
+                (*texCoords)[texIndex + 1] = 1.0f - ((float) i / (float) (numParallels));
+            }
+        }
+    }
+    
+    // Generate the indices
+    if ( indices != NULL ) {
+        uint16_t *indexBuf = (*indices);
+        for ( i = 0; i < numParallels ; i++ ) {
+            for ( j = 0; j < numSlices; j++ ) {
+                *indexBuf++  = i * ( numSlices + 1 ) + j;
+                *indexBuf++ = ( i + 1 ) * ( numSlices + 1 ) + j;
+                *indexBuf++ = ( i + 1 ) * ( numSlices + 1 ) + ( j + 1 );
+                
+                *indexBuf++ = i * ( numSlices + 1 ) + j;
+                *indexBuf++ = ( i + 1 ) * ( numSlices + 1 ) + ( j + 1 );
+                *indexBuf++ = i * ( numSlices + 1 ) + ( j + 1 );
+            }
+        }
+    }
+    
+    if (numVertices_out) {
+        *numVertices_out = numVertices;
+    }
+    
+    return numIndices;
+}
 
 - (BOOL)doInit
 {
@@ -91,7 +122,7 @@ enum TextureType
     {
         return NO;
     }
-	
+    
     [self setupYUVTexture];
     [self loadShader];
     glUseProgram(_program);
@@ -102,6 +133,24 @@ enum TextureType
     glUniform1i(textureUniformY, 0);
     glUniform1i(textureUniformU, 1);
     glUniform1i(textureUniformV, 2);
+    
+    _mvpLocation = glGetUniformLocation(_program, "modelViewProjectionMatrix");
+    
+    GLfloat *vVertices = NULL;
+    GLfloat *vTextCoord = NULL;
+    int numVertices = 0;
+    _numIndices =  esGenSphere(200, 1.0, &vVertices,  NULL,
+                               &vTextCoord, &indices, &numVertices);
+    
+    // Update attribute values
+    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0, 0, vVertices);
+    glEnableVertexAttribArray(ATTRIB_VERTEX);
+    
+    
+    glVertexAttribPointer(ATTRIB_TEXTURE, 2, GL_FLOAT, 0, 0, vTextCoord);
+    glEnableVertexAttribArray(ATTRIB_TEXTURE);
+    
+    //    [self startDeviceMotion];
     
     return YES;
 }
@@ -164,21 +213,21 @@ enum TextureType
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, _textureYUV[TEXU]);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, _textureYUV[TEXV]);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
 - (void)render
@@ -187,44 +236,29 @@ enum TextureType
     CGSize size = self.bounds.size;
     glViewport(0, 0, size.width*_viewScale, size.height*_viewScale);
     
+    float aspect = fabs(self.bounds.size.width / self.bounds.size.height);
+    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(85.0), aspect, 0.1f, 400.0f);
+    projectionMatrix = GLKMatrix4Rotate(projectionMatrix, ES_PI, 1.0f, 0.0f, 0.0f);
     
-   
-
+    GLKMatrix4 modelViewMatrix = GLKMatrix4Identity;
+    modelViewMatrix = GLKMatrix4Scale(modelViewMatrix, 100.0, 100.0, 100.0);
     
-    static const GLfloat squareVertices[] = {
-        -1.0f, -1.0f,
-        1.0f, -1.0f,
-        -1.0f,  1.0f,
-        1.0f,  1.0f,
+    CMDeviceMotion *d = _motionManager.deviceMotion;
+    if (d != nil) {
+        CMAttitude *attitude = d.attitude;
         
-    };
-
+        float cRoll = -fabs(attitude.roll); // Up/Down en landscape
+        float cYaw = attitude.yaw;  // Left/ Right en landscape -> pas besoin de prendre
+        modelViewMatrix = GLKMatrix4RotateX(modelViewMatrix, cRoll); // Up/Down axis
+        modelViewMatrix = GLKMatrix4RotateX(modelViewMatrix, ES_PI/2.0);
+        
+        modelViewMatrix = GLKMatrix4RotateY(modelViewMatrix, cYaw);
+    }
     
-    static const GLfloat coordVertices[] = {
-        0.0f, 1.0f,
-        1.0f, 1.0f,
-        0.0f,  0.0f,
-        1.0f,  0.0f,
-    };
+    GLKMatrix4 _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix);
+    glUniformMatrix4fv(_mvpLocation, 1, 0, _modelViewProjectionMatrix.m);
     
-    static const GLshort indexVertices[] = {
-        0,1,2,
-        1,2,3
-    };
-	
-	
-	// Update attribute values
-    glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_FLOAT, 0, 0, squareVertices);
-    glEnableVertexAttribArray(ATTRIB_VERTEX);
-    
-    
-    glVertexAttribPointer(ATTRIB_TEXTURE, 2, GL_FLOAT, 0, 0, coordVertices);
-    glEnableVertexAttribArray(ATTRIB_TEXTURE);
-    
-    
-    // Draw
-//    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indexVertices);
+    glDrawElements(GL_TRIANGLES, _numIndices, GL_UNSIGNED_SHORT, indices);
     glBindRenderbuffer(GL_RENDERBUFFER, _renderBuffer);
     [_glContext presentRenderbuffer:GL_RENDERBUFFER];
 }
@@ -281,60 +315,61 @@ uniform sampler2D SamplerV;\
 \
 void main(void)\
 {\
-    mediump vec3 yuv;\
-    lowp vec3 rgb;\
-    \
-    yuv.x = texture2D(SamplerY, TexCoordOut).r;\
-    yuv.y = texture2D(SamplerU, TexCoordOut).r - 0.5;\
-    yuv.z = texture2D(SamplerV, TexCoordOut).r - 0.5;\
-    \
-    rgb = mat3( 1,       1,         1,\
-               0,       -0.39465,  2.03211,\
-               1.13983, -0.58060,  0) * yuv;\
-    \
-    gl_FragColor = vec4(rgb, 1);\
-    \
+mediump vec3 yuv;\
+lowp vec3 rgb;\
+\
+yuv.x = texture2D(SamplerY, TexCoordOut).r;\
+yuv.y = texture2D(SamplerU, TexCoordOut).r - 0.5;\
+yuv.z = texture2D(SamplerV, TexCoordOut).r - 0.5;\
+\
+rgb = mat3( 1,       1,         1,\
+0,       -0.39465,  2.03211,\
+1.13983, -0.58060,  0) * yuv;\
+\
+gl_FragColor = vec4(rgb, 1);\
+\
 }"
 
 #define VSH @"attribute vec4 position;\
 attribute vec2 TexCoordIn;\
 varying vec2 TexCoordOut;\
+uniform mat4 modelViewProjectionMatrix;\
 \
 void main(void)\
 {\
-    gl_Position = position;\
-    TexCoordOut = TexCoordIn;\
+gl_Position = modelViewProjectionMatrix * position;\
+TexCoordOut = TexCoordIn;\
 }"
 
-/** 
+/**
  加载着色器
  */
 - (void)loadShader
 {
-	/** 
-	 1
-	 */
+    /**
+     1
+     */
     GLuint vertexShader = [self compileShader:VSH withType:GL_VERTEX_SHADER];
     GLuint fragmentShader = [self compileShader:FSH withType:GL_FRAGMENT_SHADER];
     
-	/** 
-	 2
-	 */
+    /**
+     2
+     */
     _program = glCreateProgram();
     glAttachShader(_program, vertexShader);
     glAttachShader(_program, fragmentShader);
     
-	/** 
-	 绑定需要在link之前
-	 */
+    /**
+     绑定需要在link之前
+     */
     glBindAttribLocation(_program, ATTRIB_VERTEX, "position");
     glBindAttribLocation(_program, ATTRIB_TEXTURE, "TexCoordIn");
     
     glLinkProgram(_program);
     
-	/** 
-	 3
-	 */
+    /**
+     3
+     */
     GLint linkSuccess;
     glGetProgramiv(_program, GL_LINK_STATUS, &linkSuccess);
     if (linkSuccess == GL_FALSE) {
@@ -346,19 +381,19 @@ void main(void)\
     }
     
     if (vertexShader)
-		glDeleteShader(vertexShader);
+        glDeleteShader(vertexShader);
     if (fragmentShader)
-		glDeleteShader(fragmentShader);
+        glDeleteShader(fragmentShader);
 }
 
 - (GLuint)compileShader:(NSString*)shaderString withType:(GLenum)shaderType
 {
     
-   	/** 
-	 1
-	 */
+   	/**
+     1
+     */
     if (!shaderString) {
-//        NSLog(@"Error loading shader: %@", error.localizedDescription);
+        //        NSLog(@"Error loading shader: %@", error.localizedDescription);
         exit(1);
     }
     else
@@ -366,26 +401,26 @@ void main(void)\
         //NSLog(@"shader code-->%@", shaderString);
     }
     
-	/** 
-	 2
-	 */
-    GLuint shaderHandle = glCreateShader(shaderType);    
+    /**
+     2
+     */
+    GLuint shaderHandle = glCreateShader(shaderType);
     
-	/** 
-	 3
-	 */
-    const char * shaderStringUTF8 = [shaderString UTF8String];    
+    /**
+     3
+     */
+    const char * shaderStringUTF8 = [shaderString UTF8String];
     int shaderStringLength = [shaderString length];
     glShaderSource(shaderHandle, 1, &shaderStringUTF8, &shaderStringLength);
     
-	/** 
-	 4
-	 */
+    /**
+     4
+     */
     glCompileShader(shaderHandle);
     
-	/** 
-	 5
-	 */
+    /**
+     5
+     */
     GLint compileSuccess;
     glGetShaderiv(shaderHandle, GL_COMPILE_STATUS, &compileSuccess);
     if (compileSuccess == GL_FALSE) {
@@ -402,6 +437,12 @@ void main(void)\
 #pragma mark - 接口
 - (void)displayYUV420pData:(void *)data width:(NSInteger)w height:(NSInteger)h
 {
+    //_pYuvData = data;
+    //    if (_offScreen || !self.window)
+    //    {
+    //        return;
+    //    }
+    
     @synchronized(self)
     {
         if (w != _videoW || h != _videoH)
@@ -418,7 +459,7 @@ void main(void)\
         glBindTexture(GL_TEXTURE_2D, _textureYUV[TEXU]);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w/2, h/2, GL_RED_EXT, GL_UNSIGNED_BYTE, data + w * h);
         
-       // [self debugGlError];
+        // [self debugGlError];
         
         glBindTexture(GL_TEXTURE_2D, _textureYUV[TEXV]);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w/2, h/2, GL_RED_EXT, GL_UNSIGNED_BYTE, data + w * h * 5 / 4);
@@ -429,33 +470,18 @@ void main(void)\
         [self render];
     }
     
-#ifdef DEBUG
-    
-    GLenum err = glGetError();
-    if (err != GL_NO_ERROR)
-    {
-        printf("GL_ERROR=======>%d\n", err);
-    }
-    struct timeval nowtime;
-    gettimeofday(&nowtime, NULL);
-    if (nowtime.tv_sec != _time.tv_sec)
-    {
-        memcpy(&_time, &nowtime, sizeof(struct timeval));
-    }
-    
-#endif
-}
 
+}
 
 - (void)setVideoSize:(GLuint)width height:(GLuint)height
 {
-
+    
     _videoW = width;
     _videoH = height;
     
     void *blackData = malloc(width * height * 1.5);
-	if(blackData)
-		//bzero(blackData, width * height * 1.5);
+    if(blackData)
+        //bzero(blackData, width * height * 1.5);
         memset(blackData, 0x0, width * height * 1.5);
     
     [EAGLContext setCurrentContext:_glContext];
@@ -469,18 +495,5 @@ void main(void)\
     free(blackData);
 }
 
-
-- (void)clearFrame
-{
-    if ([self window])
-    {
-        [EAGLContext setCurrentContext:_glContext];
-        glClearColor(0.0, 0.0, 0.0, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glBindRenderbuffer(GL_RENDERBUFFER, _renderBuffer);
-        [_glContext presentRenderbuffer:GL_RENDERBUFFER];
-    }
-    
-}
 
 @end
