@@ -53,6 +53,9 @@
         _controlView.totalTimeLabel.hidden = YES;
         _controlView.progressView.hidden = YES;
     }
+    if (_videoType == KBPlayerVideoTypePanorama) {
+        _controlView.doubleButton.hidden = NO;
+    }
     
     UIImage *image = [UIImage imageNamed:@"loading_bgView"];
     self.view.layer.contents = (id) image.CGImage;

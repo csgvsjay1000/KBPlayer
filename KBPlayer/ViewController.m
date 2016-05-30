@@ -103,16 +103,19 @@ const NSString *keyNetType = @"keyNetType";
                             keyVideoTypeValue:@"全景直播",
                             keyVideoUrl:@"rtmp://0fwc91.live1-rtmp.z1.pili.qiniucdn.com/shutong/test1",
                             keyNetType:[NSNumber numberWithInteger:KBPlayerNetTypeLocal]}];
-        NSString *path_panormal = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"mp4"];
+//        NSString *path_panormal = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"mp4"];
 
         [_array addObject:@{
                             keyVideoType:[NSNumber numberWithInteger:KBPlayerVideoTypePanorama],
                             keyVideoTypeValue:@"本地全景视频",
-                            keyVideoUrl:path_panormal,
+//                            keyVideoUrl:path_panormal,
                             keyNetType:[NSNumber numberWithInteger:KBPlayerNetTypeLocal]}];
+//        NSString *path_panormal_updown = [[NSBundle mainBundle] pathForResource:@"Galaxy11VR" ofType:@"mp4"];
+
         [_array addObject:@{
-                            keyVideoType:[NSNumber numberWithInteger:KBPlayerVideoTypeNormal],
+                            keyVideoType:[NSNumber numberWithInteger:KBPlayerVideoTypePanoramaUpAndDown],
                             keyVideoTypeValue:@"本地上下全景",
+//                            keyVideoUrl:path_panormal_updown,
                             keyNetType:[NSNumber numberWithInteger:KBPlayerNetTypeLocal]}];
         
         

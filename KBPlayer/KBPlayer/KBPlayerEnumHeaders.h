@@ -34,6 +34,7 @@ typedef enum : NSUInteger {
 typedef enum : NSUInteger {
     KBPlayerVideoTypeNormal = 10,  //普通视频
     KBPlayerVideoTypePanorama = 20, //全景视频
+    KBPlayerVideoTypePanoramaUpAndDown = 30,  //上下全景
     
 } KBPlayerVideoType;
 

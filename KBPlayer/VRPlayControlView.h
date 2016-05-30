@@ -18,5 +18,7 @@
 
 @property(nonatomic,strong)UILabel *currentTimeLabel;
 @property(nonatomic,strong)UILabel *totalTimeLabel;
+@property(nonatomic,strong)UIButton *doubleButton;
+
 
 @end

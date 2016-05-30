@@ -28,7 +28,8 @@
 @property(nonatomic,strong)NSTimer *timer;
 
 @property(nonatomic,strong)OpenGLView20 *glView;  //显示普通视频视图
-@property(nonatomic,strong)PanormalOpenGLView *panormalView;  //显示全景视频视图
+@property(nonatomic,strong)PanormalOpenGLView *panormalView_left;  //显示全景视频视图  (左边视图)
+@property(nonatomic,strong)PanormalOpenGLView *panormalView_right;  //显示全景视频视图  (右边视图)
 
 @property(nonatomic,assign)KBPlayerPlayingState playingState;  //播放状态
 
@@ -47,9 +48,11 @@
         av_register_all();
         avformat_network_init();
         _videoType = videoType;
-        if (_videoType == KBPlayerVideoTypePanorama) {
+        if (_videoType == KBPlayerVideoTypePanorama || _videoType == KBPlayerVideoTypePanoramaUpAndDown) {
             //全景视频
-            [self addSubview:self.panormalView];
+            [self addSubview:self.panormalView_left];
+            [self addSubview:self.panormalView_right];
+
             [self startDeviceMotion];
         }else{
             [self addSubview:self.glView];
@@ -141,7 +144,8 @@
 -(void)refreshFrame{
     
     _glView.frame = self.bounds;
-    _panormalView.frame = self.bounds;
+    _panormalView_left.frame = CGRectMake(0, 0, self.frame.size.width/2-1, self.frame.size.height);
+    _panormalView_right.frame = CGRectMake(self.frame.size.width/2+2, 0, self.frame.size.width/2-1, self.frame.size.height);
 
 }
 
@@ -732,7 +736,8 @@ static void AQueueOutputCallback(
             [_glView displayYUV420pData:_pFrameYUV->data[0] width:_is->video_st->codec->width height:_is->video_st->codec->height];
 //            [_glView displayYUV420pData:_pFrameYUV->data[0] width:_is->video_st->codec->width height:_is->video_st->codec->height];
         }else{
-            [_panormalView displayYUV420pData:_pFrameYUV->data[0] width:_is->video_st->codec->width height:_is->video_st->codec->height];
+            [_panormalView_left displayYUV420pData:_pFrameYUV->data[0] width:_is->video_st->codec->width height:_is->video_st->codec->height];
+            [_panormalView_right displayYUV420pData:_pFrameYUV->data[0] width:_is->video_st->codec->width height:_is->video_st->codec->height];
 //            [_panormalView displayYUV420pData:_pFrameYUV->data[0] width:_is->video_st->codec->width height:_is->video_st->codec->height];
         }
         
@@ -824,9 +829,11 @@ static void AQueueOutputCallback(
     
     _referenceAttitude = _motionManager.deviceMotion.attitude; // Maybe nil actually. reset it
     
-    _panormalView.motionManager = _motionManager;
-    _panormalView.referenceAttitude = _referenceAttitude;
+    _panormalView_left.motionManager = _motionManager;
+    _panormalView_left.referenceAttitude = _referenceAttitude;
     
+    _panormalView_right.motionManager = _motionManager;
+    _panormalView_right.referenceAttitude = _referenceAttitude;
 }
 
 -(void)stopDeviceMotion{
@@ -845,11 +852,27 @@ static void AQueueOutputCallback(
     return _glView;
 }
 
--(PanormalOpenGLView *)panormalView{
-    if (_panormalView == nil) {
-        _panormalView = [[PanormalOpenGLView alloc] initWithFrame:self.bounds];
+-(PanormalOpenGLView *)panormalView_left{
+    if (_panormalView_left == nil) {
+        if (_videoType == KBPlayerVideoTypePanorama) {
+            _panormalView_left = [[PanormalOpenGLView alloc] initWithFrame:CGRectZero playerLocation:KBPlayerLocationNone];
+        }else if (_videoType == KBPlayerVideoTypePanoramaUpAndDown){
+            _panormalView_left = [[PanormalOpenGLView alloc] initWithFrame:CGRectZero playerLocation:KBPlayerLocationLeft];
+        }
     }
-    return _panormalView;
+    return _panormalView_left;
+}
+
+-(PanormalOpenGLView *)panormalView_right{
+    if (_panormalView_right == nil) {
+        if (_videoType == KBPlayerVideoTypePanorama) {
+            _panormalView_right = [[PanormalOpenGLView alloc] initWithFrame:CGRectZero playerLocation:KBPlayerLocationNone];
+        }else if (_videoType == KBPlayerVideoTypePanoramaUpAndDown){
+            _panormalView_right = [[PanormalOpenGLView alloc] initWithFrame:CGRectZero playerLocation:KBPlayerLocationRight];
+        }
+        
+    }
+    return _panormalView_right;
 }
 
 -(BOOL)playFinshed{

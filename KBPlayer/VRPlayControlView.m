@@ -33,7 +33,8 @@
         [self.bottomView addSubview:self.progressView];
         [self.bottomView addSubview:self.slider];
         [self.bottomView addSubview:self.totalTimeLabel];
-
+        
+        [self addSubview:self.doubleButton];
         
         [self layoutSubPages];
     }
@@ -83,7 +84,11 @@
         make.centerY.equalTo(_bottomView);
         
     }];
-    
+    [_doubleButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(35, 35));
+        make.right.equalTo(self).offset(-10);
+        make.centerY.equalTo(self);
+    }];
     
 }
 
@@ -114,7 +119,7 @@
 -(UIButton *)playButton{
     if (_playButton == nil) {
         _playButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_playButton setImage:[UIImage imageNamed:@"player_play"] forState:UIControlStateNormal];
+        [_playButton setImage:[UIImage imageNamed:@"player_pause"] forState:UIControlStateNormal];
 
     }
     return _playButton;
@@ -160,6 +165,15 @@
         _slider.maximumTrackTintColor = [UIColor clearColor];
     }
     return _slider;
+}
+
+-(UIButton *)doubleButton{
+    if (_doubleButton == nil) {
+        _doubleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_doubleButton setImage:[UIImage imageNamed:@"player_double"] forState:UIControlStateNormal];
+        _doubleButton.hidden = YES;
+    }
+    return _doubleButton;
 }
 
 

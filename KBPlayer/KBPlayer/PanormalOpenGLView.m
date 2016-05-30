@@ -36,7 +36,7 @@ enum TextureType
 @implementation PanormalOpenGLView
 
 int esGenSphere ( int numSlices, float radius, float **vertices, float **normals,
-                 float **texCoords, uint16_t **indices, int *numVertices_out) {
+                 float **texCoords, uint16_t **indices, int *numVertices_out,int videoType) {
     int i;
     int j;
     int numParallels = numSlices / 2;
@@ -68,12 +68,24 @@ int esGenSphere ( int numSlices, float radius, float **vertices, float **normals
                 (*vertices)[vertex + 2] = radius * sinf ( angleStep * (float)i ) *
                 cosf ( angleStep * (float)j );
             }
-            
             if (texCoords) {
                 int texIndex = ( i * (numSlices + 1) + j ) * 2;
-                (*texCoords)[texIndex + 0] = (float) j / (float) numSlices;
-                (*texCoords)[texIndex + 1] = 1.0f - ((float) i / (float) (numParallels));
+                if (videoType == KBPlayerLocationNone) {
+                    (*texCoords)[texIndex + 0] = (float) j / (float) numSlices;
+                    (*texCoords)[texIndex + 1] = 1.0f - ((float) i / (float) (numParallels));
+                    
+                }else if (videoType == KBPlayerLocationLeft){
+                    (*texCoords)[texIndex + 0] = (float) j / (float) numSlices;
+                    (*texCoords)[texIndex + 1] = (1.0f - ((float) i / (float) (numParallels)))/2;
+                }else if (videoType == KBPlayerLocationRight){
+                    (*texCoords)[texIndex + 0] = (float) j / (float) numSlices;
+                    (*texCoords)[texIndex + 1] = (1.0f - ((float) i / (float) (numParallels)))/2+0.5f;
+                }
+                
             }
+            
+            
+            
         }
     }
     
@@ -140,7 +152,7 @@ int esGenSphere ( int numSlices, float radius, float **vertices, float **normals
     GLfloat *vTextCoord = NULL;
     int numVertices = 0;
     _numIndices =  esGenSphere(200, 1.0, &vVertices,  NULL,
-                               &vTextCoord, &indices, &numVertices);
+                               &vTextCoord, &indices, &numVertices,_playerLocation);
     
     // Update attribute values
     glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0, 0, vVertices);
@@ -167,6 +179,20 @@ int esGenSphere ( int numSlices, float radius, float **vertices, float **normals
     }
     return self;
 }
+
+-(id)initWithFrame:(CGRect)frame playerLocation:(KBPlayerLocation)playerLocation{
+    self = [super initWithFrame:frame];
+    if (self) {
+        _playerLocation = playerLocation;
+        if (![self doInit])
+        {
+            self = nil;
+        }
+        
+    }
+    return self;
+}
+
 
 - (id)initWithFrame:(CGRect)frame
 {

@@ -15,6 +15,14 @@
 #include <sys/time.h>
 #import <CoreMotion/CoreMotion.h>
 
+typedef enum : NSUInteger {
+    KBPlayerLocationNone = 10,  //不分左右屏
+    KBPlayerLocationLeft = 20,  //
+    KBPlayerLocationRight = 30, //
+    
+    
+} KBPlayerLocation;
+
 
 @interface PanormalOpenGLView : UIView{
     /**
@@ -64,6 +72,10 @@
 
 @property(nonatomic,strong)CMMotionManager *motionManager;
 @property(nonatomic,strong)CMAttitude *referenceAttitude;
+
+@property(nonatomic,assign)KBPlayerLocation playerLocation;
+
+-(id)initWithFrame:(CGRect)frame playerLocation:(KBPlayerLocation)playerLocation;
 
 - (void)displayYUV420pData:(void *)data width:(NSInteger)w height:(NSInteger)h;
 
