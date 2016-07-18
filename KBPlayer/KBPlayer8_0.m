@@ -682,6 +682,7 @@ static void AQueueOutputCallback(
             
             ref_clock = [self get_audio_clock];
             diff = vp->pts - ref_clock;
+            
             sync_threshold =
             (delay > AV_SYNC_THRESHOLD) ? delay : AV_SYNC_THRESHOLD;
             if (fabs(diff) < AV_NOSYNC_THRESHOLD) {
@@ -691,6 +692,7 @@ static void AQueueOutputCallback(
                     delay = 2 * delay;
                 }
             }
+
             _is->frame_timer += delay;
             /* computer the REAL delay */
             actual_delay = _is->frame_timer - (av_gettime() / 1000000.0);

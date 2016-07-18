@@ -17,6 +17,7 @@
 //#import "KBPlayerController6_0.h"
 //#import "KBPlayerController7_0.h"    //直播封装到uiview里面，使外面controller使用方便  版本2.0.0
 #import "KBPlayerController8_0.h"
+//#import "KBPlayerController9_0.h"  //硬解
 
 
 const NSString *keyVideoType = @"keyVideoType";
@@ -96,27 +97,28 @@ const NSString *keyNetType = @"keyNetType";
         [_array addObject:@{
                             keyVideoType:[NSNumber numberWithInteger:KBPlayerVideoTypeNormal],
                             keyVideoTypeValue:@"香港卫视直播",
-                            keyVideoUrl:@"rtmp://live.hkstv.hk.lxdns.com/live/hks",
+                            keyVideoUrl:@"rtmp://0fwc91.live1-rtmp.z1.pili.qiniucdn.com/shutong/test1",
                             keyNetType:[NSNumber numberWithInteger:KBPlayerNetTypeLive]}];
         [_array addObject:@{
-                            keyVideoType:[NSNumber numberWithInteger:KBPlayerVideoTypeNormal],
+                            keyVideoType:[NSNumber numberWithInteger:KBPlayerVideoTypePanorama],
                             keyVideoTypeValue:@"全景直播",
                             keyVideoUrl:@"rtmp://0fwc91.live1-rtmp.z1.pili.qiniucdn.com/shutong/test1",
-                            keyNetType:[NSNumber numberWithInteger:KBPlayerNetTypeLocal]}];
+//                            keyVideoUrl:@"rtmp://0fwc91.live1-rtmp.z1.pili.qiniucdn.com/shutong/test1",
+                            keyNetType:[NSNumber numberWithInteger:KBPlayerNetTypeLive]}];
 //        NSString *path_panormal = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"mp4"];
-
-        [_array addObject:@{
-                            keyVideoType:[NSNumber numberWithInteger:KBPlayerVideoTypePanorama],
-                            keyVideoTypeValue:@"本地全景视频",
+//
+//        [_array addObject:@{
+//                            keyVideoType:[NSNumber numberWithInteger:KBPlayerVideoTypePanorama],
+//                            keyVideoTypeValue:@"本地全景视频",
 //                            keyVideoUrl:path_panormal,
-                            keyNetType:[NSNumber numberWithInteger:KBPlayerNetTypeLocal]}];
-//        NSString *path_panormal_updown = [[NSBundle mainBundle] pathForResource:@"Galaxy11VR" ofType:@"mp4"];
-
-        [_array addObject:@{
-                            keyVideoType:[NSNumber numberWithInteger:KBPlayerVideoTypePanoramaUpAndDown],
-                            keyVideoTypeValue:@"本地上下全景",
-//                            keyVideoUrl:path_panormal_updown,
-                            keyNetType:[NSNumber numberWithInteger:KBPlayerNetTypeLocal]}];
+//                            keyNetType:[NSNumber numberWithInteger:KBPlayerNetTypeLocal]}];
+////        NSString *path_panormal_updown = [[NSBundle mainBundle] pathForResource:@"Galaxy11VR" ofType:@"mp4"];
+//
+//        [_array addObject:@{
+//                            keyVideoType:[NSNumber numberWithInteger:KBPlayerVideoTypePanoramaUpAndDown],
+//                            keyVideoTypeValue:@"本地上下全景",
+////                            keyVideoUrl:path_panormal_updown,
+//                            keyNetType:[NSNumber numberWithInteger:KBPlayerNetTypeLocal]}];
         
         
     }
