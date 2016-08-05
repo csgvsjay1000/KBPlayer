@@ -16,10 +16,10 @@
 //#import "KBPlayerController5_0.h"  // 直播封装在Controller里，功能比较完整  版本1.0.0
 //#import "KBPlayerController6_0.h"
 //#import "KBPlayerController7_0.h"    //直播封装到uiview里面，使外面controller使用方便  版本2.0.0
-//#import "KBPlayerController8_0.h"     //直播较稳定，目前待解决问题，当分辨率达到1980P时会出现帧率波动，导致卡顿
+#import "KBPlayerController8_0.h"     //直播较稳定，目前待解决问题，当分辨率达到1980P时会出现帧率波动，导致卡顿
 //#import "KBPlayerController9_0.h"  //硬解
 
-#import "KBPlayerController10_0.h"
+//#import "KBPlayerController10_0.h"
 
 const NSString *keyVideoType = @"keyVideoType";
 const NSString *keyVideoTypeValue = @"keyVideoTypeValue";
@@ -68,7 +68,7 @@ const NSString *keyNetType = @"keyNetType";
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    KBPlayerController10_0 *vc = [[KBPlayerController10_0 alloc] init];
+    KBPlayerController8_0 *vc = [[KBPlayerController8_0 alloc] init];
     vc.videoDictionary = self.array[indexPath.row];
     [self presentViewController:vc animated:NO completion:nil];
     

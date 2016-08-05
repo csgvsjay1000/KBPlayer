@@ -49,6 +49,7 @@
 		4C6A4D981CEC658D0027BAA8 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6A4D8A1CEC658D0027BAA8 /* NSLayoutConstraint+MASDebugAdditions.m */; };
 		4C6A4D991CEC658D0027BAA8 /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6A4D8C1CEC658D0027BAA8 /* View+MASAdditions.m */; };
 		4C6A4D9A1CEC658D0027BAA8 /* ViewController+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6A4D8F1CEC658D0027BAA8 /* ViewController+MASAdditions.m */; };
+		4C7267C91D548DCB001C6A57 /* KBPlayer11_0.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7267C81D548DCB001C6A57 /* KBPlayer11_0.m */; };
 		4C86C65B1CED5E4D00F3CD4C /* cuc_ieschool.flv in Resources */ = {isa = PBXBuildFile; fileRef = 4C86C65A1CED5E4D00F3CD4C /* cuc_ieschool.flv */; };
 /* End PBXBuildFile section */
 
@@ -276,6 +277,9 @@
 		4C6A4D8F1CEC658D0027BAA8 /* ViewController+MASAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ViewController+MASAdditions.m"; sourceTree = "<group>"; };
 		4C6A4D9C1CEC68610027BAA8 /* KBPlayerHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KBPlayerHeader.h; sourceTree = "<group>"; };
 		4C6A4D9D1CEC687C0027BAA8 /* KBFunctionHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KBFunctionHeader.h; sourceTree = "<group>"; };
+		4C7267C51D543063001C6A57 /* KBFFmpegHeader10_0.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KBFFmpegHeader10_0.h; sourceTree = "<group>"; };
+		4C7267C71D548DCB001C6A57 /* KBPlayer11_0.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KBPlayer11_0.h; sourceTree = "<group>"; };
+		4C7267C81D548DCB001C6A57 /* KBPlayer11_0.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KBPlayer11_0.m; sourceTree = "<group>"; };
 		4C8612981CF3F01200527C0F /* KBPlayerController4_0.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KBPlayerController4_0.h; sourceTree = "<group>"; };
 		4C8612991CF3F01200527C0F /* KBPlayerController4_0.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KBPlayerController4_0.m; sourceTree = "<group>"; };
 		4C86129B1CF3F02C00527C0F /* KBFFmpegHeader4_0.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KBFFmpegHeader4_0.h; sourceTree = "<group>"; };
@@ -355,6 +359,7 @@
 			isa = PBXGroup;
 			children = (
 				4C42FA711D52F01D009506A2 /* player.c */,
+				4C7267C51D543063001C6A57 /* KBFFmpegHeader10_0.h */,
 				4C42FA791D52F1E9009506A2 /* KBPlayer10_0.h */,
 				4C42FA7A1D52F1E9009506A2 /* KBPlayer10_0.m */,
 				4C42FA761D52F0EF009506A2 /* KBPlayerController10_0.h */,
@@ -437,6 +442,7 @@
 				4C5B29931CF8315B0000ECCD /* 8_0 */,
 				4C51810F1D10FB84001D62A8 /* 9_0 */,
 				4C42FA701D52EFF8009506A2 /* 10_0 */,
+				4C7267C61D548DA8001C6A57 /* 11_0 */,
 				4C6A4D721CEC64C60027BAA8 /* VRPlayControlView.h */,
 				4C6A4D731CEC64C60027BAA8 /* VRPlayControlView.m */,
 				4C6A4CAB1CEC4EF30027BAA8 /* Main.storyboard */,
@@ -807,6 +813,15 @@
 			path = KBHeader;
 			sourceTree = "<group>";
 		};
+		4C7267C61D548DA8001C6A57 /* 11_0 */ = {
+			isa = PBXGroup;
+			children = (
+				4C7267C71D548DCB001C6A57 /* KBPlayer11_0.h */,
+				4C7267C81D548DCB001C6A57 /* KBPlayer11_0.m */,
+			);
+			path = 11_0;
+			sourceTree = "<group>";
+		};
 		4C8612971CF3EDFC00527C0F /* 4_0 */ = {
 			isa = PBXGroup;
 			children = (
@@ -982,6 +997,7 @@
 				4C17BB2C1CEEC311008464E0 /* OpenGLView20.m in Sources */,
 				4C6A4D9A1CEC658D0027BAA8 /* ViewController+MASAdditions.m in Sources */,
 				4C6A4D921CEC658D0027BAA8 /* MASConstraint.m in Sources */,
+				4C7267C91D548DCB001C6A57 /* KBPlayer11_0.m in Sources */,
 				4C6A4D941CEC658D0027BAA8 /* MASLayoutConstraint.m in Sources */,
 				4C6A4CA41CEC4EF20027BAA8 /* main.m in Sources */,
 				4C5B29991CF831B90000ECCD /* KBPlayerController8_0.m in Sources */,

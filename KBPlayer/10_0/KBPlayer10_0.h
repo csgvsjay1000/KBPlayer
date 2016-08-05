@@ -10,4 +10,12 @@
 
 @interface KBPlayer10_0 : UIView
 
+-(void)preparePlayWithUrlStr:(NSString *)urlStr;
+
+-(void)play;
+
+-(void)pause;
+
+-(void)refreshFrame;
+
 @end

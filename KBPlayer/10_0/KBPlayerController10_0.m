@@ -9,11 +9,13 @@
 #import "KBPlayerController10_0.h"
 #import "VRPlayControlView.h"
 #import "KBPlayerHeader.h"
+#import "KBPlayer10_0.h"
 
 @interface KBPlayerController10_0 ()
 
 @property(nonatomic,strong)VRPlayControlView *controlView;
 @property(nonatomic,strong)NSTimer *timer;   //定时器，用于播放按钮，滑动条等隐藏和显示。
+@property(nonatomic,strong)KBPlayer10_0 *kbplayer;
 
 @end
 
@@ -24,7 +26,8 @@
     self.view.backgroundColor = [UIColor blackColor];
     [self.view addSubview:self.controlView];
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(liveViewTaped)]];
-    
+    [self.view addSubview:self.kbplayer];
+    [self.kbplayer preparePlayWithUrlStr:nil];
     [self layoutSubPages];
 }
 
@@ -37,6 +40,8 @@
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     [self liveViewTaped];
+    _kbplayer.frame = self.view.bounds;
+    [_kbplayer refreshFrame];
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
@@ -85,6 +90,13 @@
 
     }
     return _controlView;
+}
+
+-(KBPlayer10_0 *)kbplayer{
+    if (_kbplayer == nil) {
+        _kbplayer = [[KBPlayer10_0 alloc] initWithFrame:self.view.bounds];
+    }
+    return _kbplayer;
 }
 
 @end

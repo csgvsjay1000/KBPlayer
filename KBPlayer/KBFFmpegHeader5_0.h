@@ -31,6 +31,9 @@ static int quit = 0;
 #define AV_SYNC_THRESHOLD 0.01
 #define AV_NOSYNC_THRESHOLD 10.0
 
+#define SAMPLE_CORRECTION_PERCENT_MAX 10
+#define AUDIO_DIFF_AVG_NB 20
+
 
 typedef struct PacketQueue{
     AVPacketList *first_pkt,*last_pkt;
@@ -193,6 +196,12 @@ typedef struct VideoState {
     int64_t audio_tgt_channel_layout;
     int audio_tgt_freq;
     
+    
+    enum AVSampleFormat audio_src_fmt;
+    int audio_src_channels;
+    int64_t audio_src_channel_layout;
+    int audio_src_freq;
+    
 //    uint8_t *audio_buf;
     DECLARE_ALIGNED(16,uint8_t,audio_buf) [AVCODEC_MAX_AUDIO_FRAME_SIZE * 4];
 
@@ -211,7 +220,13 @@ typedef struct VideoState {
     double video_current_pts;
     double frame_last_pts;
     
+    double audio_diff_cum;/*used of AV difference average computation*/
+    double audio_diff_avg_coef;
+    double audio_diff_threshold;
+    int audio_diff_avg_count;
+    
     
 }VideoState;
+
 
 #endif /* KBFFmpegHeader5_0_h */
