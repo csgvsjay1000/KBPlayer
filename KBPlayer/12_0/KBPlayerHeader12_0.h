@@ -57,16 +57,17 @@ typedef struct VideoState {
     double audio_clock;
     AVStream *audio_st;
     PacketQueue audioq;
-    uint8_t audio_buf[(AVCODEC_MAX_AUDIO_FRAME_SIZE * 3) / 2];
+    uint8_t *audio_buf;
     unsigned int audio_buf_size;
     unsigned int audio_buf_index;
     AVPacket audio_pkt;
     uint8_t *audio_pkt_data;
     int audio_pkt_size;
-    AVFrame audio_frame;
+    AVFrame *audio_frame;
     AVStream *video_st;
     PacketQueue videoq;
     int audio_hw_buf_size;
+    int audio_format_buffer_size;
     double frame_timer;
     double frame_last_pts;
     double frame_last_delay;
@@ -79,6 +80,21 @@ typedef struct VideoState {
     
     AVIOContext *io_ctx;
     struct SwsContext *sws_ctx;
+    
+    struct SwrContext *swr_ctx;
+
+    
+    AudioQueueRef playQueue;
+    
+    AudioStreamBasicDescription format;
+    AudioQueueBufferRef playBufs[3];
+    UInt32 currentPaketsNum;
+    
+    AudioStreamPacketDescription *packetDesc;
+    
+    int audio_tgt_channels;
+    int64_t audio_tgt_channel_layout;
+    int audio_tgt_freq;
     
     char filename[1024];
     int quit;
