@@ -51,6 +51,8 @@
 		4C6A4D9A1CEC658D0027BAA8 /* ViewController+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6A4D8F1CEC658D0027BAA8 /* ViewController+MASAdditions.m */; };
 		4C7267C91D548DCB001C6A57 /* KBPlayer11_0.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7267C81D548DCB001C6A57 /* KBPlayer11_0.m */; };
 		4C86C65B1CED5E4D00F3CD4C /* cuc_ieschool.flv in Resources */ = {isa = PBXBuildFile; fileRef = 4C86C65A1CED5E4D00F3CD4C /* cuc_ieschool.flv */; };
+		4CF693F21D5AC8530036294C /* KBPlayer12_0.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF693F11D5AC8530036294C /* KBPlayer12_0.m */; };
+		4CF693F51D5AC8740036294C /* KBPlayerController12_0.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF693F41D5AC8740036294C /* KBPlayerController12_0.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -287,6 +289,12 @@
 		4C8612A41CF4537300527C0F /* KBPlayerController5_0.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KBPlayerController5_0.m; sourceTree = "<group>"; };
 		4C8612A61CF4538600527C0F /* KBFFmpegHeader5_0.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KBFFmpegHeader5_0.h; sourceTree = "<group>"; };
 		4C86C65A1CED5E4D00F3CD4C /* cuc_ieschool.flv */ = {isa = PBXFileReference; lastKnownFileType = file; path = cuc_ieschool.flv; sourceTree = "<group>"; };
+		4CF693F01D5AC8530036294C /* KBPlayer12_0.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KBPlayer12_0.h; sourceTree = "<group>"; };
+		4CF693F11D5AC8530036294C /* KBPlayer12_0.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KBPlayer12_0.m; sourceTree = "<group>"; };
+		4CF693F31D5AC8740036294C /* KBPlayerController12_0.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KBPlayerController12_0.h; sourceTree = "<group>"; };
+		4CF693F41D5AC8740036294C /* KBPlayerController12_0.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KBPlayerController12_0.m; sourceTree = "<group>"; };
+		4CF693F71D5AC89F0036294C /* KBPlayerHeader12_0.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KBPlayerHeader12_0.h; sourceTree = "<group>"; };
+		4CF693F81D5AF2F80036294C /* play.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = play.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -443,6 +451,7 @@
 				4C51810F1D10FB84001D62A8 /* 9_0 */,
 				4C42FA701D52EFF8009506A2 /* 10_0 */,
 				4C7267C61D548DA8001C6A57 /* 11_0 */,
+				4CF693EF1D5AC7D50036294C /* 12_0 */,
 				4C6A4D721CEC64C60027BAA8 /* VRPlayControlView.h */,
 				4C6A4D731CEC64C60027BAA8 /* VRPlayControlView.m */,
 				4C6A4CAB1CEC4EF30027BAA8 /* Main.storyboard */,
@@ -458,6 +467,7 @@
 			isa = PBXGroup;
 			children = (
 				4C17BB311CEF1EB4008464E0 /* ffplay.c */,
+				4CF693F81D5AF2F80036294C /* play.c */,
 				4C1DDD571CF2A929003AA4C2 /* ffplay2.c */,
 				4C86C65A1CED5E4D00F3CD4C /* cuc_ieschool.flv */,
 				4C6A4D9B1CEC684B0027BAA8 /* KBHeader */,
@@ -842,6 +852,18 @@
 			name = 5_0;
 			sourceTree = "<group>";
 		};
+		4CF693EF1D5AC7D50036294C /* 12_0 */ = {
+			isa = PBXGroup;
+			children = (
+				4CF693F01D5AC8530036294C /* KBPlayer12_0.h */,
+				4CF693F11D5AC8530036294C /* KBPlayer12_0.m */,
+				4CF693F31D5AC8740036294C /* KBPlayerController12_0.h */,
+				4CF693F41D5AC8740036294C /* KBPlayerController12_0.m */,
+				4CF693F71D5AC89F0036294C /* KBPlayerHeader12_0.h */,
+			);
+			path = 12_0;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -979,6 +1001,7 @@
 				4C6A4CAA1CEC4EF30027BAA8 /* ViewController.m in Sources */,
 				4C5181151D10FC97001D62A8 /* KBPlayerController9_0.m in Sources */,
 				4C6A4D961CEC658D0027BAA8 /* MASViewConstraint.m in Sources */,
+				4CF693F21D5AC8530036294C /* KBPlayer12_0.m in Sources */,
 				4C6A4D741CEC64C60027BAA8 /* VRPlayControlView.m in Sources */,
 				4C5181181D113727001D62A8 /* AAPLEAGLLayer.m in Sources */,
 				4C6A4CA71CEC4EF20027BAA8 /* AppDelegate.m in Sources */,
@@ -993,6 +1016,7 @@
 				4C6A4D971CEC658D0027BAA8 /* NSArray+MASAdditions.m in Sources */,
 				4C5B29961CF8319B0000ECCD /* KBPlayer8_0.m in Sources */,
 				4C31C8561CF58B320012B679 /* CacheView.m in Sources */,
+				4CF693F51D5AC8740036294C /* KBPlayerController12_0.m in Sources */,
 				4C42FA7B1D52F1E9009506A2 /* KBPlayer10_0.m in Sources */,
 				4C17BB2C1CEEC311008464E0 /* OpenGLView20.m in Sources */,
 				4C6A4D9A1CEC658D0027BAA8 /* ViewController+MASAdditions.m in Sources */,
