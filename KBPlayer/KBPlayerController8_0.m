@@ -7,14 +7,14 @@
 //
 
 #import "KBPlayerController8_0.h"
-#import "KBPlayer11_0.h"
+#import "KBPlayer8_0.h"
 #import "ViewController.h"
 #import "VRPlayControlView.h"
 #import "KBPlayerHeader.h"
 
-@interface KBPlayerController8_0 ()<KBPlayer11_0ItemDelegate>
+@interface KBPlayerController8_0 ()<KBPlayer8_0ItemDelegate>
 
-@property(nonatomic,strong)KBPlayer11_0 *kbplayer;
+@property(nonatomic,strong)KBPlayer8_0 *kbplayer;
 @property(nonatomic,strong)VRPlayControlView *controlView;
 
 @property(nonatomic) BOOL isStopByUser;  //用户手动暂停，暂停有两种情况，1、用户手动暂停，2、网络差导致的暂停。
@@ -203,9 +203,9 @@
     return _controlView;
 }
 
--(KBPlayer11_0 *)kbplayer{
+-(KBPlayer8_0 *)kbplayer{
     if (_kbplayer == nil) {
-        _kbplayer = [[KBPlayer11_0 alloc] initWithFrame:self.view.bounds videoType:_videoType];
+        _kbplayer = [[KBPlayer8_0 alloc] initWithFrame:self.view.bounds videoType:_videoType];
         _kbplayer.playerDelegate = self;
     }
     return _kbplayer;

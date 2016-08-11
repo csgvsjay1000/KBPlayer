@@ -70,7 +70,7 @@ const NSString *keyNetType = @"keyNetType";
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     KBPlayerController12_0 *vc = [[KBPlayerController12_0 alloc] init];
-//    vc.videoDictionary = self.array[indexPath.row];
+    vc.videoDictionary = self.array[indexPath.row];
     [self presentViewController:vc animated:NO completion:nil];
     
 }

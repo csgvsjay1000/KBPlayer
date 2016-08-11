@@ -11,6 +11,7 @@
 #import "VRPlayControlView.h"
 #import "KBPlayerHeader12_0.h"
 #import "KBPlayerHeader.h"
+#import "ViewController.h"
 
 @interface KBPlayerController12_0 ()
 
@@ -25,11 +26,16 @@
 -(void)viewDidLoad{
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
-    [self.view addSubview:self.kbplayer];
+    if (_videoDictionary[keyVideoUrl]) {
+        
+        [self.view addSubview:self.kbplayer];
+        [self.kbplayer preparePlayWithUrlStr:_videoDictionary[keyVideoUrl]];
+        
+    }
     [self.view addSubview:self.controlView];
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(liveViewTaped)]];
     [self layoutSubPages];
-    [_kbplayer preparePlayWithUrlStr:nil];
+//    [_kbplayer preparePlayWithUrlStr:nil];
 }
 
 -(void)layoutSubPages{

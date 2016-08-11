@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface KBPlayerController12_0 : UIViewController
+@property(nonatomic,strong)NSDictionary *videoDictionary;
 
 @end
